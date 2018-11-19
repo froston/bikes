@@ -1,10 +1,13 @@
 import React from 'react';
 import Layout from './Layout'
+import { BrowserRouter, Route } from 'react-router-dom'
 
-class App extends React.PureComponent {
+class App extends React.Component {
   render() {
     return (
-      <Layout />
+      <BrowserRouter>
+        <Route path="/" component={Layout} />
+      </BrowserRouter>
     );
   }
 }

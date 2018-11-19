@@ -11,19 +11,17 @@ const styles = theme => ({
   },
 });
 
-class ApplicationBar extends React.PureComponent {
-  render() {
-    const { classes } = this.props;
-    return (
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
-            Bike Stuff
+const ApplicationBar = (props) => {
+  const { classes } = props;
+  return (
+    <AppBar position="fixed" className={classes.appBar}>
+      <Toolbar>
+        <Typography variant="h6" color="inherit" noWrap>
+          Skládka Kol
           </Typography>
-        </Toolbar>
-      </AppBar>
-    );
-  }
+      </Toolbar>
+    </AppBar>
+  );
 }
 
 ApplicationBar.propTypes = {

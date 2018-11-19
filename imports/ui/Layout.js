@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from './AppBar'
-import MainMenu from './MainMenu'
-import ProjectsList from './ProjectsList'
+import { Switch, Route } from 'react-router-dom'
+import { AppBar, MainMenu } from './components'
+import { CreateEshop, EshopsList, ProjectsList } from './containers'
 
 const drawerWidth = 240;
 
@@ -27,7 +27,7 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar,
 });
 
-class Layout extends React.PureComponent {
+class Layout extends React.Component {
   state = {
     open: false
   }
@@ -52,7 +52,13 @@ class Layout extends React.PureComponent {
         </Drawer>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <ProjectsList />
+          <Switch>
+            <Route exact path="/projekty" component={ProjectsList} />
+            <Route exact path="/dily" component={null} />
+            <Route exact path="/eshopy" component={EshopsList} />
+            <Route path="/eshopy/create" component={CreateEshop} />
+            <Route path="/eshopy/:id" component={CreateEshop} />
+          </Switch>
         </main>
       </div>
     );
