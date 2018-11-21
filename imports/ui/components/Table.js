@@ -137,11 +137,11 @@ class EnhancedTable extends React.Component {
                   return (
                     <TableRow
                       hover
+                      key={n.id}
                       onClick={event => this.handleClick(event, n.id)}
                       role="checkbox"
                       aria-checked={isSelected}
                       tabIndex={-1}
-                      key={n.id}
                       selected={isSelected}
                     >
                       <TableCell padding="checkbox">
@@ -149,7 +149,7 @@ class EnhancedTable extends React.Component {
                       </TableCell>
                       {rows.map(row => {
                         const text = row && row.render ? row.render(n[row.id]) : n[row.id]
-                        return <TableCell>{text}</TableCell>
+                        return <TableCell key={row.id}>{text}</TableCell>
                       })}
                     </TableRow>
                   );

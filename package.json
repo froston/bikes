@@ -2,7 +2,7 @@
   "name": "simple-todos",
   "private": true,
   "scripts": {
-    "start": "meteor run --verbose",
+    "start": "meteor run",
     "test": "meteor test --once --driver-package meteortesting:mocha --port 5000",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
@@ -13,6 +13,7 @@
     "@material-ui/icons": "^3.0.1",
     "classnames": "^2.2.6",
     "meteor-node-stubs": "^0.4.1",
+    "moment": "^2.22.2",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-router-dom": "^4.3.1"

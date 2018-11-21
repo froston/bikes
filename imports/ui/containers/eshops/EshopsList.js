@@ -1,22 +1,16 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom'
+import { withTracker } from 'meteor/react-meteor-data';
+import { Eshops } from '../../../api/eshops';
 import { Table } from '../../components'
 import UpdateIcon from '@material-ui/icons/Update';
+import moment from 'moment'
 
 class EshopsList extends React.Component {
-  state = {
-    data: [
-      { id: 1, name: "Test", date: "12-12-2018" },
-      { id: 2, name: "Test1", date: "12-12-2018" },
-      { id: 3, name: "Test2", date: "12-12-2018" },
-      { id: 4, name: "Test3", date: "12-12-2018", autoUpdate: true },
-    ]
-  };
-
   rows = [
     { id: 'name', label: 'Název eshopu' },
-    { id: 'date', label: 'Datum vytvoření' },
-    { id: 'lastUpdate', label: 'Posledni aktualizace' },
+    { id: 'date', label: 'Datum vytvoření', render: date => moment(date).format("DD.MM.YYYY") },
+    { id: 'lastUpdate', label: 'Posledni aktualizace', render: date => moment(date).format("DD.MM.YYYY") },
     { id: 'autoUpdate', label: 'Aktualizovat automaticky', render: (text) => text ? <UpdateIcon /> : null },
   ];
 
@@ -26,7 +20,7 @@ class EshopsList extends React.Component {
   }
 
   render() {
-    const { data } = this.state;
+    const { data } = this.props;
     return (
       <div>
         <Table
@@ -40,4 +34,9 @@ class EshopsList extends React.Component {
   }
 }
 
-export default withRouter(EshopsList);
+export default withTracker(() => {
+  Meteor.subscribe('eshops');
+  return {
+    data: Eshops.find({}).fetch(),
+  };
+})(EshopsList);

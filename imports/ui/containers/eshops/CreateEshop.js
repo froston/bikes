@@ -8,8 +8,6 @@ import Info from './Info'
 class CreateEshop extends React.Component {
   render() {
     const { match, location } = this.props
-    console.log(location.pathname)
-    console.log(`${match.url}`)
     return (
       <Paper square>
         <Tabs

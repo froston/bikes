@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import { Switch, Route } from 'react-router-dom'
 import { AppBar, MainMenu } from './components'
 import { CreateEshop, EshopsList, ProjectsList } from './containers'
@@ -38,7 +37,6 @@ class Layout extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <CssBaseline />
         <AppBar />
         <Drawer
           className={classes.drawer}
