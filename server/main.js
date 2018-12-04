@@ -9,7 +9,7 @@ Meteor.startup(() => {
 
 // Listen to incoming HTTP requests (can only be used on the server).
 WebApp.connectHandlers.use('/auto-update', (req, res) => {
-  run("http://localhost:5000", (err, data) => {
+  run((err, data) => {
     if (err) throw err
     res.writeHead(200);
     res.end(JSON.stringify(data));

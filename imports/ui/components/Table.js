@@ -133,12 +133,12 @@ class EnhancedTable extends React.Component {
               {stableSort(data, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(n => {
-                  const isSelected = this.isSelected(n.id);
+                  const isSelected = this.isSelected(n._id);
                   return (
                     <TableRow
                       hover
-                      key={n.id}
-                      onClick={event => this.handleClick(event, n.id)}
+                      key={n._id}
+                      onClick={event => this.handleClick(event, n._id)}
                       role="checkbox"
                       aria-checked={isSelected}
                       tabIndex={-1}
@@ -148,7 +148,7 @@ class EnhancedTable extends React.Component {
                         <Checkbox checked={isSelected} />
                       </TableCell>
                       {rows.map(row => {
-                        const text = row && row.render ? row.render(n[row.id]) : n[row.id]
+                        const text = row && row.render ? row.render(n[row.id], n) : n[row.id]
                         return <TableCell key={row.id}>{text}</TableCell>
                       })}
                     </TableRow>
