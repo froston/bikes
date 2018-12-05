@@ -18,6 +18,9 @@ class EshopsList extends React.Component {
     const { match, history } = this.props
     history.push(`${match.url}/create`)
   }
+  handleRemove = ids => {
+    ids.forEach(id => Meteor.call('eshops.remove', id))
+  }
 
   render() {
     const { data } = this.props;
@@ -28,6 +31,7 @@ class EshopsList extends React.Component {
           rows={this.rows}
           data={data}
           handleCreate={this.handleCreate}
+          handleRemove={this.handleRemove}
         />
       </div>
     );
@@ -39,4 +43,4 @@ export default withTracker(() => {
   return {
     data: Eshops.find({}).fetch(),
   };
-})(EshopsList);
+})(withRouter(EshopsList))

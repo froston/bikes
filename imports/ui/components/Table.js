@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import { TableToolbar, TableHead } from './'
 
-function desc(a, b, orderBy) {
+const desc = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -20,7 +20,7 @@ function desc(a, b, orderBy) {
   return 0;
 }
 
-function stableSort(array, cmp) {
+const stableSort = (array, cmp) => {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = cmp(a[0], b[0]);
@@ -30,9 +30,7 @@ function stableSort(array, cmp) {
   return stabilizedThis.map(el => el[0]);
 }
 
-function getSorting(order, orderBy) {
-  return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-}
+const getSorting = (order, orderBy) => order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy)
 
 const styles = theme => ({
   root: {
@@ -56,14 +54,12 @@ class EnhancedTable extends React.Component {
     rowsPerPage: 5,
   };
 
-  handleRequestSort = (event, property) => {
+  handleRequestSort = (e, property) => {
     const orderBy = property;
     let order = 'desc';
-
     if (this.state.orderBy === property && this.state.order === 'desc') {
       order = 'asc';
     }
-
     this.setState({ order, orderBy });
   };
 
@@ -75,11 +71,10 @@ class EnhancedTable extends React.Component {
     this.setState({ selected: [] });
   };
 
-  handleClick = (event, id) => {
+  handleClick = (e, id) => {
     const { selected } = this.state;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
-
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
@@ -96,18 +91,23 @@ class EnhancedTable extends React.Component {
     this.setState({ selected: newSelected });
   };
 
-  handleChangePage = (event, page) => {
+  handleChangePage = (e, page) => {
     this.setState({ page });
   };
 
-  handleChangeRowsPerPage = event => {
-    this.setState({ rowsPerPage: event.target.value });
+  handleChangeRowsPerPage = e => {
+    this.setState({ rowsPerPage: e.target.value });
   };
+
+  handleRemove = () => {
+    this.props.handleRemove(this.state.selected)
+    this.state.selected.forEach(id => this.handleClick(null, id))
+  }
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, rows, data, title, handleCreate } = this.props;
+    const { classes, rows, data, title, handleCreate, handleRemove } = this.props;
     const { order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
@@ -117,6 +117,7 @@ class EnhancedTable extends React.Component {
           title={title}
           numSelected={selected.length}
           handleCreate={handleCreate}
+          handleRemove={this.handleRemove}
         />
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
@@ -133,12 +134,12 @@ class EnhancedTable extends React.Component {
               {stableSort(data, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(n => {
-                  const isSelected = this.isSelected(n.id);
+                  const isSelected = this.isSelected(n._id);
                   return (
                     <TableRow
                       hover
-                      key={n.id}
-                      onClick={event => this.handleClick(event, n.id)}
+                      key={n._id}
+                      onClick={event => this.handleClick(event, n._id)}
                       role="checkbox"
                       aria-checked={isSelected}
                       tabIndex={-1}
@@ -148,7 +149,7 @@ class EnhancedTable extends React.Component {
                         <Checkbox checked={isSelected} />
                       </TableCell>
                       {rows.map(row => {
-                        const text = row && row.render ? row.render(n[row.id]) : n[row.id]
+                        const text = row && row.render ? row.render(n[row.id]) : String(n[row.id])
                         return <TableCell key={row.id}>{text}</TableCell>
                       })}
                     </TableRow>

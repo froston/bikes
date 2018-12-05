@@ -12,35 +12,48 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     width: 500,
-  },
-  dense: {
-    marginTop: 19,
-  },
-  menu: {
-    width: 200,
   }
 })
 
-class Info extends React.Component {
+class XmlAtr extends React.Component {
   render() {
     const { classes, handleChange, values } = this.props;
     return (
       <div>
         <div className={classes.container}>
           <TextField
-            label="Nazev e-shopu"
+            label="Id"
             className={classes.textField}
-            value={values.name}
-            onChange={handleChange('name')}
+            value={values.id}
+            onChange={handleChange('id')}
             margin="normal"
           />
         </div>
         <div className={classes.container}>
           <TextField
-            label="Odkaz k XML zdroji"
+            label="Produkt"
             className={classes.textField}
-            value={values.url}
-            onChange={handleChange('url')}
+            value={values.product}
+            onChange={handleChange('product')}
+            margin="normal"
+          />
+        </div>
+
+        <div className={classes.container}>
+          <TextField
+            label="Kategorie"
+            className={classes.textField}
+            value={values.category}
+            onChange={handleChange('category')}
+            margin="normal"
+          />
+        </div>
+        <div className={classes.container}>
+          <TextField
+            label="Cena"
+            className={classes.textField}
+            value={values.price}
+            onChange={handleChange('price')}
             margin="normal"
           />
         </div>
@@ -49,8 +62,8 @@ class Info extends React.Component {
   }
 }
 
-Info.propTypes = {
+XmlAtr.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Info);
+export default withStyles(styles)(XmlAtr);
