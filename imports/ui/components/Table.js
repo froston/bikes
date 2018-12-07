@@ -149,7 +149,7 @@ class EnhancedTable extends React.Component {
                         <Checkbox checked={isSelected} />
                       </TableCell>
                       {rows.map(row => {
-                        const text = row && row.render ? row.render(n[row.id]) : String(n[row.id])
+                        const text = row && row.render ? row.render(n[row.id], n) : String(n[row.id])
                         return <TableCell key={row.id}>{text}</TableCell>
                       })}
                     </TableRow>
