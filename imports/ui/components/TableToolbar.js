@@ -33,7 +33,7 @@ const toolbarStyles = theme => ({
     color: theme.palette.text.secondary,
   },
   actionButtons: {
-    width: 250,
+    width: 350,
     zIndex: 2,
     display: 'flex',
     padding: 0,
@@ -81,21 +81,21 @@ const EnhancedTableToolbar = props => {
       <div className={classes.spacer} />
       <div className={classes.actions}>
         {numSelected > 0 ? (
-          <Tooltip title="Delete">
-            <IconButton aria-label="Delete" onClick={props.handleRemove}>
+          <Tooltip title="Smazat">
+            <IconButton aria-label="Smazat" onClick={props.handleRemove}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
         ) : (
             <div className={classes.actionButtons}>
-              <Tooltip title="Filter">
+              <Tooltip title="Filtr">
                 <Button size="small" className={classes.button} onClick={props.handleCreate}>
-                  <FilterListIcon className={classNames(classes.leftIcon, classes.iconSmall)} /> FILTER
+                  <FilterListIcon className={classNames(classes.leftIcon, classes.iconSmall)} /> Filtr
                 </Button>
               </Tooltip>
-              <Tooltip title="Create">
+              <Tooltip title="Vytvořit">
                 <Button size="small" className={classes.button} onClick={props.handleCreate} >
-                  <AddIcon className={classNames(classes.leftIcon, classes.iconSmall)} /> CREATE NEW
+                  <AddIcon className={classNames(classes.leftIcon, classes.iconSmall)} /> Vytvořit nový
                   </Button>
               </Tooltip>
             </div>

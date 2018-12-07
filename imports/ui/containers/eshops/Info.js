@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 const styles = theme => ({
   container: {
@@ -23,15 +26,15 @@ const styles = theme => ({
 
 class Info extends React.Component {
   render() {
-    const { classes, handleChange, values } = this.props;
+    const { classes, handleChange, handleCheck, values } = this.props;
     return (
       <div>
         <div className={classes.container}>
           <TextField
             label="Nazev e-shopu"
             className={classes.textField}
-            value={values.name}
-            onChange={handleChange('name')}
+            value={values.eshop}
+            onChange={handleChange('eshop')}
             margin="normal"
           />
         </div>
@@ -44,6 +47,19 @@ class Info extends React.Component {
             margin="normal"
           />
         </div>
+        <br />
+        <FormGroup row>
+          <FormControlLabel control={
+            <Checkbox
+              checked={values.autoUpdate}
+              onChange={handleCheck('autoUpdate')}
+              value="autoUpdate"
+              color="primary"
+            />
+          }
+            label="Automaticky update"
+          />
+        </FormGroup>
       </div>
     );
   }

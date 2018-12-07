@@ -12,6 +12,9 @@ import SaveIcon from '@material-ui/icons/Save';
 import Info from './Info'
 import XmlAtr from './XmlAtr'
 
+import { Eshops } from '../../../api/eshops';
+import { Tracker } from 'meteor/tracker'
+
 const styles = theme => ({
   container: {
     display: 'flex',
@@ -39,25 +42,61 @@ const styles = theme => ({
 class CreateEshop extends React.Component {
   state = {
     value: 0,
-    name: '',
+    _id: null,
+    eshop: '',
     url: '',
-    product: '',
+    name: '',
     id: '',
+    item: '',
+    ean: '',
+    producer: '',
     category: '',
-    price: ''
+    delimiter: '',
+    price_vo: '',
+    price_mo: '',
+    amount: '',
+    unit: '',
+    photo: '',
+    autoUpdate: false
   }
+
+  componentDidMount() {
+    const { match } = this.props
+    if (match.params && match.params.id) {
+      this.loadData(match.params.id)
+    }
+  }
+
+  loadData = id => {
+    Tracker.autorun(() => {
+      Meteor.subscribe('eshop', id);
+      let eshop = Eshops.findOne({ _id: id });
+      if (eshop) {
+        this.setState({
+          _id: eshop._id,
+          eshop: eshop.name,
+          url: eshop.url,
+          autoUpdate: eshop.autoUpdate,
+          ...eshop.attributes
+        });
+      }
+    });
+  }
+
   changeTab = (e, value) => this.setState({ value })
 
   handleSubmit = e => {
     e.preventDefault()
-    Meteor.call('eshops.insert', this.state);
+    Meteor.call('eshops.save', this.state);
     this.props.history.push(`/eshopy`)
   }
 
   handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
+    this.setState({ [name]: event.target.value });
+  };
+
+  handleCheck = name => event => {
+    this.setState({ [name]: event.target.checked });
   };
 
   render() {
@@ -66,20 +105,19 @@ class CreateEshop extends React.Component {
     return (
       <Paper square>
         <Tabs
-          fullWidth
           value={value}
           indicatorColor="primary"
           textColor="primary"
           onChange={this.changeTab}
         >
-          <Tab label="Obecne" />
+          <Tab label="Obecné" />
           <Tab label="XML Atributy" />
         </Tabs>
         <Card>
           <CardContent>
             <form noValidate autoComplete="off">
               <div style={{ display: value === 0 ? 'block' : 'none' }}>
-                <Info handleChange={this.handleChange} values={this.state} />
+                <Info handleChange={this.handleChange} handleCheck={this.handleCheck} values={this.state} />
               </div>
               <div style={{ display: value === 1 ? 'block' : 'none' }}>
                 <XmlAtr handleChange={this.handleChange} values={this.state} />
@@ -95,7 +133,7 @@ class CreateEshop extends React.Component {
               className={classes.button}
             >
               <SaveIcon className={classes.leftIcon} />
-              SAVE
+              Uložit
           </Button>
           </CardActions>
         </Card>

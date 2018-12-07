@@ -48,6 +48,7 @@ class EnhancedTableHead extends React.Component {
               </TableCell>
             );
           }, this)}
+          <TableCell />
         </TableRow>
       </TableHead>
     );

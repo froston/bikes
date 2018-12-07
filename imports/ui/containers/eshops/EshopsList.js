@@ -16,10 +16,14 @@ class EshopsList extends React.Component {
 
   handleCreate = () => {
     const { match, history } = this.props
-    history.push(`${match.url}/create`)
+    history.push(`${match.url}/novy`)
   }
   handleRemove = ids => {
     ids.forEach(id => Meteor.call('eshops.remove', id))
+  }
+  handleEdit = (id) => {
+    const { match, history } = this.props
+    history.push(`${match.url}/${id}`)
   }
 
   render() {
@@ -27,11 +31,13 @@ class EshopsList extends React.Component {
     return (
       <div>
         <Table
+          rowKey="_id"
           title="Seznam Eshopů"
           rows={this.rows}
           data={data}
           handleCreate={this.handleCreate}
           handleRemove={this.handleRemove}
+          handleEdit={this.handleEdit}
         />
       </div>
     );

@@ -1,12 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import classNames from 'classnames';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import EditIcon from '@material-ui/icons/Create';
 import Checkbox from '@material-ui/core/Checkbox';
 import { TableToolbar, TableHead } from './'
 
@@ -43,12 +46,21 @@ const styles = theme => ({
   tableWrapper: {
     overflowX: 'auto',
   },
+  leftIcon: {
+    marginRight: theme.spacing.unit,
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
+  iconSmall: {
+    fontSize: 20,
+  },
 });
 
 class EnhancedTable extends React.Component {
   state = {
     order: 'asc',
-    orderBy: 'calories',
+    orderBy: '_id',
     selected: [],
     page: 0,
     rowsPerPage: 5,
@@ -65,7 +77,7 @@ class EnhancedTable extends React.Component {
 
   handleSelectAllClick = event => {
     if (event.target.checked) {
-      this.setState(state => ({ selected: this.props.data.map(n => n.id) }));
+      this.setState(state => ({ selected: this.props.data.map(n => n._id) }));
       return;
     }
     this.setState({ selected: [] });
@@ -107,10 +119,9 @@ class EnhancedTable extends React.Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, rows, data, title, handleCreate, handleRemove } = this.props;
+    const { rowKey, classes, rows, data, title, handleCreate, handleEdit } = this.props;
     const { order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
     return (
       <Paper className={classes.root}>
         <TableToolbar
@@ -134,12 +145,12 @@ class EnhancedTable extends React.Component {
               {stableSort(data, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(n => {
-                  const isSelected = this.isSelected(n._id);
+                  const isSelected = this.isSelected(n[rowKey]);
                   return (
                     <TableRow
                       hover
-                      key={n._id}
-                      onClick={event => this.handleClick(event, n._id)}
+                      key={n[rowKey]}
+                      onClick={event => this.handleClick(event, n[rowKey])}
                       role="checkbox"
                       aria-checked={isSelected}
                       tabIndex={-1}
@@ -152,6 +163,12 @@ class EnhancedTable extends React.Component {
                         const text = row && row.render ? row.render(n[row.id], n) : String(n[row.id])
                         return <TableCell key={row.id}>{text}</TableCell>
                       })}
+                      <TableCell>
+                        <Button label="Edit" onClick={() => handleEdit(n[rowKey])}>
+                          <EditIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
+                          Upravit
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -169,10 +186,10 @@ class EnhancedTable extends React.Component {
           rowsPerPage={rowsPerPage}
           page={page}
           backIconButtonProps={{
-            'aria-label': 'Previous Page',
+            'aria-label': 'Předchozí stránka',
           }}
           nextIconButtonProps={{
-            'aria-label': 'Next Page',
+            'aria-label': 'Další stránka',
           }}
           onChangePage={this.handleChangePage}
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
@@ -183,6 +200,13 @@ class EnhancedTable extends React.Component {
 }
 
 EnhancedTable.propTypes = {
+  rowKey: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  rows: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired,
+  handleCreate: PropTypes.func.isRequired,
+  handleRemove: PropTypes.func.isRequired,
+  handleEdit: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
 };
 

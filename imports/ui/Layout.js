@@ -54,7 +54,7 @@ class Layout extends React.Component {
             <Route exact path="/projekty" component={ProjectsList} />
             <Route exact path="/dily" component={ProductsList} />
             <Route exact path="/eshopy" component={EshopsList} />
-            <Route path="/eshopy/create" component={CreateEshop} />
+            <Route path="/eshopy/novy" component={CreateEshop} />
             <Route path="/eshopy/:id" component={CreateEshop} />
           </Switch>
         </main>
