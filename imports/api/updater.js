@@ -2,8 +2,8 @@ import { Meteor } from 'meteor/meteor'
 import { parseString } from 'xml2js'
 import xpath from 'xml2js-xpath'
 import request from 'request'
-import { Eshops } from '../imports/api/eshops'
-import { Products } from '../imports/api/products'
+import { Eshops } from './eshops'
+import { Products } from './products'
 
 const opt = {
   trim: true,
@@ -41,23 +41,34 @@ const saveItem = (item, attrs) => {
   }
 }
 
-export const run = (callback) => {
+const autoUpdate = () => {
   const eshops = Eshops.find({}).fetch();
   eshops.forEach(eshop => {
-    const attrs = eshop.attributes
-    if (eshop.url && eshop.autoUpdate) {
-      // eshop.url = 'http://localhost:5000'
-      request(eshop.url, { json: true },
-        Meteor.bindEnvironment((err, data, body) => {
-          if (err) return callback(err)
-          parseString(body, opt, (err, json) => {
-            const items = xpath.find(json, `//${attrs.item}`);
-            items.forEach(item => {
-              saveItem(item, attrs)
-            })
-          })
-          callback(null, `Update finished. XML has ${items.length} products.`)
-        }));
-    }
+    updateEshop(eshop)
   })
+}
+
+const updateEshop = (eshop) => {
+  if (eshop && eshop.url && eshop.autoUpdate) {
+    const attrs = eshop.attributes
+    //eshop.url = 'http://localhost:5000'
+    request(eshop.url, { json: true },
+      Meteor.bindEnvironment((err, data, body) => {
+        if (err) return err
+        parseString(body, opt, (err, json) => {
+          const items = xpath.find(json, `//${attrs.item}`);
+          items.forEach(item => {
+            saveItem(item, attrs)
+          })
+        })
+        return items.length
+      }));
+  } else {
+    return 0
+  }
+}
+
+export {
+  autoUpdate,
+  updateEshop
 }

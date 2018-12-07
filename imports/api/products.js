@@ -7,3 +7,9 @@ if (Meteor.isServer) {
     return Products.find();
   });
 }
+
+Meteor.methods({
+  'products.remove'(id) {
+    Products.remove(id);
+  }
+})

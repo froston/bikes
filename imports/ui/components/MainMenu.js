@@ -9,28 +9,33 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import MotorcycleIcon from '@material-ui/icons/Motorcycle';
 import { Link } from 'react-router-dom'
 
-const MainMenu = (props) => (
-  <List>
-    <Link to="/projekty">
-      <ListItem button>
-        <ListItemIcon><MotorcycleIcon /></ListItemIcon>
-        <ListItemText primary="Projekty" />
-      </ListItem>
-    </Link>
-    <Link to="/dily">
-      <ListItem button>
-        <ListItemIcon><BuildIcon /></ListItemIcon>
-        <ListItemText primary="Díly" />
-      </ListItem>
-    </Link>
-    <Divider />
-    <Link to="/eshopy">
-      <ListItem button>
-        <ListItemIcon><ShoppingCartIcon /></ListItemIcon>
-        <ListItemText primary="E-shopy" />
-      </ListItem>
-    </Link >
-  </List >
-)
+const getParentUrl = p => p.split('/')[1] || '/'; // the menu key is always parent url
+
+const MainMenu = ({ pathname }) => {
+  const isSelected = p => p === getParentUrl(pathname)
+  return (
+    <List>
+      <Link to="/projekty">
+        <ListItem button selected={isSelected('projekty')}>
+          <ListItemIcon><MotorcycleIcon /></ListItemIcon>
+          <ListItemText primary="Projekty" />
+        </ListItem>
+      </Link>
+      <Link to="/dily">
+        <ListItem button selected={isSelected('dily')}>
+          <ListItemIcon><BuildIcon /></ListItemIcon>
+          <ListItemText primary="Díly" />
+        </ListItem>
+      </Link>
+      <Divider />
+      <Link to="/eshopy">
+        <ListItem button selected={isSelected('eshopy')}>
+          <ListItemIcon><ShoppingCartIcon /></ListItemIcon>
+          <ListItemText primary="E-shopy" />
+        </ListItem>
+      </Link >
+    </List >
+  )
+}
 
 export default MainMenu

@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+import { autoUpdate, updateEshop } from './updater'
 
 export const Eshops = new Mongo.Collection('eshops');
 
@@ -9,14 +10,8 @@ if (Meteor.isServer) {
     return Eshops.find();
   });
   Meteor.publish('eshop', function eshopPublication(_id) {
-    return Eshops.findOne({ _id });
+    return Eshops.find({ _id });
   });
-}
-
-const checkEshop = (eshop) => {
-  check(eshop.name, String);
-  check(eshop.url, String);
-  check(eshop.autoUpdate, Boolean);
 }
 
 Meteor.methods({
@@ -27,7 +22,6 @@ Meteor.methods({
     // check if updating or inserting
     if (eshop._id) {
       check(eshop._id, String);
-      console.log(eshop)
       Eshops.update(eshop._id, {
         name: eshop.eshop,
         url: eshop.url,
@@ -71,6 +65,13 @@ Meteor.methods({
         lastUpdate: new Date(),
       });
     }
+  },
+  'eshops.update'(_id) {
+    const eshop = Eshops.findOne({ _id });
+    updateEshop(eshop)
+  },
+  'eshops.autoUpdate'() {
+    autoUpdate()
   },
   'eshops.remove'(id) {
     Eshops.remove(id);

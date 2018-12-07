@@ -1,7 +1,7 @@
 import EshopsList from './EshopsList'
-import CreateEshop from './CreateEshop'
+import EshopDetail from './EshopDetail'
 
 export {
   EshopsList,
-  CreateEshop,
+  EshopDetail,
 }

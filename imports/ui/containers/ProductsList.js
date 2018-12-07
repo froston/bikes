@@ -37,6 +37,7 @@ class ProductList extends React.Component {
     const { data } = this.props;
     return (
       <Table
+        rowKey="_id"
         title="Seznam Produktů"
         rows={this.rows}
         data={data}

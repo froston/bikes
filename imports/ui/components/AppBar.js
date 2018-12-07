@@ -18,7 +18,7 @@ const ApplicationBar = (props) => {
       <Toolbar>
         <Typography variant="h6" color="inherit" noWrap>
           Skládka Kol
-          </Typography>
+        </Typography>
       </Toolbar>
     </AppBar>
   );
