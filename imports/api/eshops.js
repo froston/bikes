@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { WebApp } from 'meteor/webapp';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { autoUpdate, updateEshop } from './updater'
@@ -11,6 +12,17 @@ if (Meteor.isServer) {
   });
   Meteor.publish('eshop', function eshopPublication(_id) {
     return Eshops.find({ _id });
+  });
+  Meteor.methods({
+    'eshops.update'(_id) {
+      const eshop = Eshops.findOne({ _id });
+      updateEshop(eshop)
+    },
+  })
+  WebApp.connectHandlers.use('/auto-update', (req, res) => {
+    autoUpdate()
+    res.writeHead(200);
+    res.end("Done");
   });
 }
 
@@ -65,13 +77,6 @@ Meteor.methods({
         lastUpdate: new Date(),
       });
     }
-  },
-  'eshops.update'(_id) {
-    const eshop = Eshops.findOne({ _id });
-    updateEshop(eshop)
-  },
-  'eshops.autoUpdate'() {
-    autoUpdate()
   },
   'eshops.remove'(id) {
     Eshops.remove(id);

@@ -2,8 +2,8 @@ import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
-import { Products } from '../../api/products';
-import { Table } from '../components'
+import { Products } from '../../../api/products';
+import { Table } from '../../components'
 
 const styles = {
   avatar: {
@@ -33,6 +33,16 @@ class ProductList extends React.Component {
     { id: 'price_vo', label: 'VO Cena' },
     { id: 'amount', label: 'Skladem', render: (text, rec) => `${rec.amount} ${rec.unit}` },
   ];
+
+  handleRemove = ids => {
+    ids.forEach(id => Meteor.call('products.remove', id))
+  }
+
+  handleEdit = (id) => {
+    const { match, history } = this.props
+    history.push(`${match.url}/${id}`)
+  }
+
   render() {
     const { data } = this.props;
     return (
@@ -41,6 +51,8 @@ class ProductList extends React.Component {
         title="Seznam Produktů"
         rows={this.rows}
         data={data}
+        handleRemove={this.handleRemove}
+        handleEdit={this.handleEdit}
       />
     );
   }

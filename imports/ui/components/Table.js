@@ -204,7 +204,7 @@ EnhancedTable.propTypes = {
   title: PropTypes.string.isRequired,
   rows: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
-  handleCreate: PropTypes.func.isRequired,
+  handleCreate: PropTypes.func,
   handleRemove: PropTypes.func.isRequired,
   handleEdit: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,

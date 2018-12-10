@@ -21,10 +21,10 @@ const MainMenu = ({ pathname }) => {
           <ListItemText primary="Projekty" />
         </ListItem>
       </Link>
-      <Link to="/dily">
-        <ListItem button selected={isSelected('dily')}>
+      <Link to="/produkty">
+        <ListItem button selected={isSelected('produkty')}>
           <ListItemIcon><BuildIcon /></ListItemIcon>
-          <ListItemText primary="Díly" />
+          <ListItemText primary="Produkty" />
         </ListItem>
       </Link>
       <Divider />

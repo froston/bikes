@@ -101,7 +101,7 @@ class EshopDetail extends React.Component {
   handleSubmit = e => {
     e.preventDefault()
     Meteor.call('eshops.save', this.state);
-    this.props.historyresizeBy
+    this.props.history.push('/eshopy')
   }
 
   handleUpdate = () => {

@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
 import { Switch, Route } from 'react-router-dom'
 import { AppBar, MainMenu } from './components'
-import { EshopDetail, EshopsList, ProjectsList, ProductsList } from './containers'
+import { EshopDetail, EshopsList, ProjectsList, ProductsList, ProductDetail } from './containers'
 
 const drawerWidth = 240;
 
@@ -53,7 +53,8 @@ class Layout extends React.Component {
           <div className={classes.toolbar} />
           <Switch>
             <Route exact path="/projekty" component={ProjectsList} />
-            <Route exact path="/dily" component={ProductsList} />
+            <Route exact path="/produkty" component={ProductsList} />
+            <Route exact path="/produkty/:id" component={ProductDetail} />
             <Route exact path="/eshopy" component={EshopsList} />
             <Route path="/eshopy/novy" component={EshopDetail} />
             <Route path="/eshopy/:id" component={EshopDetail} />

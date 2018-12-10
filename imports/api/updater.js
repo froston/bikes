@@ -25,12 +25,16 @@ const saveItem = (item, attrs) => {
       Products.update({ code }, { $set: { price_vo, price_mo, amount } })
     }
   } else {
+    let category = getTagValue(item, attrs.category)
+    if (category && attrs.delimiter) {
+      category = category.split(attrs.delimiter)
+    }
     const itemToInsert = {
       name: getTagValue(item, attrs.name),
       ean: getTagValue(item, attrs.ean),
       code: getTagValue(item, attrs.id),
-      category: getTagValue(item, attrs.category),
       producer: getTagValue(item, attrs.producer),
+      category: category,
       price_vo: price_vo,
       price_mo: price_vo,
       amount: amount,
@@ -54,8 +58,9 @@ const updateEshop = (eshop) => {
     //eshop.url = 'http://localhost:5000'
     request(eshop.url, { json: true },
       Meteor.bindEnvironment((err, data, body) => {
-        if (err) return err
+        if (err) throw err
         parseString(body, opt, (err, json) => {
+          if (err) throw err
           const items = xpath.find(json, `//${attrs.item}`);
           items.forEach(item => {
             saveItem(item, attrs)
