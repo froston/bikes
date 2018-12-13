@@ -14,15 +14,15 @@ if (Meteor.isServer) {
     return Eshops.find({ _id });
   });
   Meteor.methods({
-    'eshops.update'(_id) {
+    async 'eshops.update'(_id) {
       const eshop = Eshops.findOne({ _id });
-      updateEshop(eshop)
+      return await updateEshop(eshop)
     },
   })
-  WebApp.connectHandlers.use('/auto-update', (req, res) => {
-    autoUpdate()
+  WebApp.connectHandlers.use('/auto-update', async (req, res) => {
+    const result = await autoUpdate()
     res.writeHead(200);
-    res.end("Done");
+    res.end(result);
   });
 }
 

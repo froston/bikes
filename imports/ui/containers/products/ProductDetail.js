@@ -8,8 +8,12 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
+import ClearIcon from '@material-ui/icons/Clear';
 import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Grid from '@material-ui/core/Grid';
+import Chip from '@material-ui/core/Chip';
+import Typography from '@material-ui/core/Typography';
 import { Products } from '../../../api/products';
 
 const styles = theme => ({
@@ -19,6 +23,9 @@ const styles = theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
+  },
+  categories: {
+    margin: '10px 0 30px'
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -36,7 +43,10 @@ const styles = theme => ({
   },
   leftIcon: {
     marginRight: theme.spacing.unit,
-  }
+  },
+  chip: {
+    margin: theme.spacing.unit,
+  },
 })
 
 class ProductDetail extends React.Component {
@@ -75,17 +85,35 @@ class ProductDetail extends React.Component {
     this.props.history.push('/produkty')
   }
 
+  handleDelete = e => {
+    e.preventDefault()
+    Meteor.call('products.remove', this.state._id);
+    this.props.history.push('/produkty')
+  }
+
   render() {
     const { classes } = this.props
-    const { code, name, photo, price_mo, price_vo, producer, amount, unit } = this.state
+    const { code, ean, name, category, photo, price_mo, price_vo, producer, amount, unit } = this.state
     console.log(this.state)
     return (
       <Paper square>
         <Card>
           <CardContent>
+            <Typography variant="h4" color="inherit" noWrap>
+              {name}
+            </Typography>
+            <div className={classes.categories}>
+              {category && category.map((cat, index) => (
+                <Chip
+                  key={index}
+                  label={cat}
+                  className={classes.chip}
+                />
+              ))}
+            </div>
             <div className={classes.root}>
-              <Grid container spacing={16}>
-                <Grid item sm={4}>
+              <Grid container spacing={40}>
+                <Grid item sm={3}>
                   <img src={photo} alt="Náhled produktu" className={classes.img} />
                 </Grid >
                 <Grid item sm={4}>
@@ -99,14 +127,13 @@ class ProductDetail extends React.Component {
                   <TextField
                     label="Ean"
                     className={classes.textField}
-                    value={code}
+                    value={ean}
                     margin="normal"
-                    disabled
                   />
                   <TextField
-                    label="Nazev"
+                    label="Vyrobce"
                     className={classes.textField}
-                    value={name}
+                    value={producer}
                     margin="normal"
                   />
                 </Grid>
@@ -114,8 +141,11 @@ class ProductDetail extends React.Component {
                   <TextField
                     label="Skladem"
                     className={classes.textField}
-                    value={amount + unit}
+                    value={String(amount)}
                     margin="normal"
+                    InputProps={{
+                      endAdornment: <InputAdornment position="start">{unit}</InputAdornment>,
+                    }}
                   />
                   <TextField
                     label="Cena MO"
@@ -127,12 +157,6 @@ class ProductDetail extends React.Component {
                     label="Cena VO"
                     className={classes.textField}
                     value={price_vo}
-                    margin="normal"
-                  />
-                  <TextField
-                    label="Producer"
-                    className={classes.textField}
-                    value={producer}
                     margin="normal"
                   />
                 </Grid >
@@ -149,6 +173,16 @@ class ProductDetail extends React.Component {
             >
               <SaveIcon className={classes.leftIcon} />
               Uložit
+            </Button>
+            <Button
+              onClick={this.handleDelete}
+              variant="outlined"
+              size="large"
+              color="secondary"
+              className={classes.button}
+            >
+              <ClearIcon className={classes.leftIcon} />
+              Smazat
             </Button>
           </CardActions>
         </Card>

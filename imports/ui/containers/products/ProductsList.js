@@ -2,10 +2,11 @@ import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
 import { Products } from '../../../api/products';
 import { Table } from '../../components'
 
-const styles = {
+const styles = theme => ({
   avatar: {
     margin: 10,
   },
@@ -14,7 +15,10 @@ const styles = {
     width: 60,
     height: 60,
   },
-};
+  chip: {
+    margin: theme.spacing.unit,
+  },
+})
 
 class ProductList extends React.Component {
   rows = [
@@ -28,7 +32,7 @@ class ProductList extends React.Component {
       )
     },
     { id: 'name', label: 'Název' },
-    { id: 'category', label: 'Kategorie' },
+    { id: 'category', label: 'Kategorie', render: c => c.map(cat => <Chip label={cat} className={this.props.classes.chip} />) },
     { id: 'price_mo', label: 'MO Cena' },
     { id: 'price_vo', label: 'VO Cena' },
     { id: 'amount', label: 'Skladem', render: (text, rec) => `${rec.amount} ${rec.unit}` },

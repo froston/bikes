@@ -11,6 +11,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import CachedIcon from '@material-ui/icons/Cached';
+import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
 import { Eshops } from '../../../api/eshops';
 import Info from './Info'
@@ -55,6 +56,8 @@ class EshopDetail extends React.Component {
   state = {
     value: 0,
     updatting: false,
+    updated: false,
+    message: null,
     _id: null,
     eshop: '',
     url: '',
@@ -105,9 +108,11 @@ class EshopDetail extends React.Component {
   }
 
   handleUpdate = () => {
-    this.setState({ updatting: true })
+    this.setState({ updatting: true, updated: false, message: null })
     Meteor.call('eshops.update', this.state._id, (err, res) => {
-      this.setState({ updatting: false })
+      console.log(res)
+      const message = err ? "Pri importu nastala chyba" : `${res.inserted} produktu vytvoreno, ${res.updated} upraveno`
+      this.setState({ updatting: false, updated: true, message })
     });
   };
 
@@ -121,7 +126,7 @@ class EshopDetail extends React.Component {
 
   render() {
     const { classes } = this.props
-    const { value, updatting } = this.state
+    const { value, updatting, updated, message } = this.state
     return (
       <Paper square>
         <Tabs
@@ -164,10 +169,11 @@ class EshopDetail extends React.Component {
                   className={classes.button}
                   disabled={updatting}
                 >
-                  <CachedIcon className={classes.leftIcon} />
-                  Aktualizovat ceny
+                  {updated ? <CheckIcon className={classes.leftIcon} /> : <CachedIcon className={classes.leftIcon} />}
+                  {updated ? message : 'Aktualizovat ceny'}
                 </Button>
                 {updatting && <CircularProgress size={24} className={classes.buttonProgress} />}
+
               </div>
             }
           </CardActions>

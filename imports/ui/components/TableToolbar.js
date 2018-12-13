@@ -93,11 +93,13 @@ const EnhancedTableToolbar = props => {
                   <FilterListIcon className={classNames(classes.leftIcon, classes.iconSmall)} /> Filtr
                 </Button>
               </Tooltip>
-              <Tooltip title="Vytvořit">
-                <Button size="small" className={classes.button} onClick={props.handleCreate} >
-                  <AddIcon className={classNames(classes.leftIcon, classes.iconSmall)} /> Vytvořit nový
+              {props.handleCreate &&
+                <Tooltip title="Vytvořit">
+                  <Button size="small" className={classes.button} onClick={props.handleCreate} >
+                    <AddIcon className={classNames(classes.leftIcon, classes.iconSmall)} /> Vytvořit nový
                   </Button>
-              </Tooltip>
+                </Tooltip>
+              }
             </div>
           )}
       </div>
