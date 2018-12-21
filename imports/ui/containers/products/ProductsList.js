@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
@@ -32,7 +33,7 @@ class ProductList extends React.Component {
       )
     },
     { id: 'name', label: 'Název' },
-    { id: 'category', label: 'Kategorie', render: c => c.map(cat => <Chip label={cat} className={this.props.classes.chip} />) },
+    { id: 'category', label: 'Kategorie', render: c => c.map(cat => <Chip key={cat} label={cat} className={this.props.classes.chip} />) },
     { id: 'price_mo', label: 'MO Cena' },
     { id: 'price_vo', label: 'VO Cena' },
     { id: 'amount', label: 'Skladem', render: (text, rec) => `${rec.amount} ${rec.unit}` },
@@ -48,7 +49,7 @@ class ProductList extends React.Component {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, handleSearch } = this.props;
     return (
       <Table
         rowKey="_id"
@@ -57,14 +58,15 @@ class ProductList extends React.Component {
         data={data}
         handleRemove={this.handleRemove}
         handleEdit={this.handleEdit}
+        handleSearch={handleSearch}
       />
     );
   }
 }
 
-export default withTracker(() => {
-  Meteor.subscribe('products');
+export default withTracker(props => {
+  Meteor.subscribe('products', props.searchValue);
   return {
-    data: Products.find({}).fetch(),
-  };
-})(withStyles(styles)(ProductList));
+    data: Products.find({}).fetch()
+  }
+})(withStyles(styles)(withRouter(ProductList)));

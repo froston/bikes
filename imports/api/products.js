@@ -3,8 +3,14 @@ import { Mongo } from 'meteor/mongo';
 export const Products = new Mongo.Collection('products');
 
 if (Meteor.isServer) {
-  Meteor.publish('products', function productsPublication() {
-    return Products.find();
+  Products.rawCollection().createIndex({
+    name: "text",
+  });
+  Meteor.publish('products', function (searchValue) {
+    if (!searchValue) {
+      return Products.find({});
+    }
+    return Products.find({ $text: { $search: searchValue } });
   });
   Meteor.publish('product', function productPublication(_id) {
     return Products.find({ _id });

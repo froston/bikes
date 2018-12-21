@@ -119,7 +119,7 @@ class EnhancedTable extends React.Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { rowKey, classes, rows, data, title, handleCreate, handleEdit } = this.props;
+    const { rowKey, classes, rows, data, title, handleCreate, handleEdit, handleSearch } = this.props;
     const { order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
     return (
@@ -129,6 +129,7 @@ class EnhancedTable extends React.Component {
           numSelected={selected.length}
           handleCreate={handleCreate}
           handleRemove={this.handleRemove}
+          handleSearch={handleSearch}
         />
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
