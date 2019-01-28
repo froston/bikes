@@ -49,7 +49,7 @@ const styles = theme => ({
   },
 })
 
-class ProductDetail extends React.Component {
+class ProjectDetail extends React.Component {
   state = {
     _id: '',
     code: '',
@@ -191,4 +191,4 @@ class ProductDetail extends React.Component {
 }
 
 
-export default withStyles(styles)(withRouter(ProductDetail));
+export default withStyles(styles)(withRouter(ProjectDetail));

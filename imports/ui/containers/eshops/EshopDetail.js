@@ -110,7 +110,6 @@ class EshopDetail extends React.Component {
   handleUpdate = () => {
     this.setState({ updatting: true, updated: false, message: null })
     Meteor.call('eshops.update', this.state._id, (err, res) => {
-      console.log(res)
       const message = err ? "Pri importu nastala chyba" : `${res.inserted} produktu vytvoreno, ${res.updated} upraveno`
       this.setState({ updatting: false, updated: true, message })
     });

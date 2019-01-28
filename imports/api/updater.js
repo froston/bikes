@@ -73,7 +73,6 @@ const updateEshop = (eshop) => {
       }
       request(options, Meteor.bindEnvironment((err, data, body) => {
         if (err) reject(err)
-        console.log(body)
         parseString(body, opt, (err, json) => {
           if (err) reject(err)
           const items = xpath.find(json, `//${attrs.item}`);

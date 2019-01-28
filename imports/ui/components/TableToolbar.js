@@ -51,6 +51,9 @@ const toolbarStyles = theme => ({
   button: {
     margin: theme.spacing.unit,
   },
+  createButton: {
+    marginTop: 15,
+  },
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
@@ -132,12 +135,14 @@ class EnhancedTableToolbar extends React.Component {
                     <SearchIcon />
                   </IconButton >
                 </Tooltip>
-                <Tooltip title="Filtr">
-                  <Filter />
-                </Tooltip>
+                {this.props.handleFilter &&
+                  <Tooltip title="Filtr">
+                    <Filter handleFilter={this.props.handleFilter} />
+                  </Tooltip>
+                }
                 {this.props.handleCreate &&
                   <Tooltip title="Vytvořit">
-                    <Button size="small" className={classes.button} onClick={this.props.handleCreate} >
+                  <Button size="small" className={classNames(classes.button, classes.createButton)} onClick={this.props.handleCreate} >
                       <AddIcon className={classNames(classes.leftIcon, classes.iconSmall)} /> Vytvořit nový
                   </Button>
                   </Tooltip>
@@ -154,6 +159,9 @@ EnhancedTableToolbar.propTypes = {
   title: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
+  handleRemove: PropTypes.func,
+  handleCreate: PropTypes.func,
+  handleFilter: PropTypes.func,
 };
 
 export default withStyles(toolbarStyles)(EnhancedTableToolbar);

@@ -11,6 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Create';
 import Checkbox from '@material-ui/core/Checkbox';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { TableToolbar, TableHead } from './'
 
 const desc = (a, b, orderBy) => {
@@ -54,6 +55,9 @@ const styles = theme => ({
   },
   iconSmall: {
     fontSize: 20,
+  },
+  proccess: {
+    flexGrow: 1,
   },
 });
 
@@ -119,17 +123,21 @@ class EnhancedTable extends React.Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { rowKey, classes, rows, data, title, handleCreate, handleEdit, handleSearch } = this.props;
+    const { rowKey, classes, rows, data, title, handleCreate, handleEdit, handleSearch, handleFilter } = this.props;
     const { order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
     return (
       <Paper square className={classes.root}>
+        <div className={classes.proccess}>
+          <LinearProgress />
+        </div>
         <TableToolbar
           title={title}
           numSelected={selected.length}
           handleCreate={handleCreate}
           handleRemove={this.handleRemove}
           handleSearch={handleSearch}
+          handleFilter={handleFilter}
         />
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
@@ -201,13 +209,13 @@ class EnhancedTable extends React.Component {
 }
 
 EnhancedTable.propTypes = {
-  rowKey: PropTypes.string.isRequired,
+  rowKey: PropTypes.string,
   title: PropTypes.string.isRequired,
   rows: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
   handleCreate: PropTypes.func,
-  handleRemove: PropTypes.func.isRequired,
-  handleEdit: PropTypes.func.isRequired,
+  handleRemove: PropTypes.func,
+  handleEdit: PropTypes.func,
   classes: PropTypes.object.isRequired,
 };
 

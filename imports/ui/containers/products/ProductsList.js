@@ -49,7 +49,7 @@ class ProductList extends React.Component {
   }
 
   render() {
-    const { data, handleSearch } = this.props;
+    const { data, handleSearch, handleFilter } = this.props;
     return (
       <Table
         rowKey="_id"
@@ -59,13 +59,14 @@ class ProductList extends React.Component {
         handleRemove={this.handleRemove}
         handleEdit={this.handleEdit}
         handleSearch={handleSearch}
+        handleFilter={handleFilter}
       />
     );
   }
 }
 
 export default withTracker(props => {
-  Meteor.subscribe('products', props.searchValue);
+  Meteor.subscribe('products', props.searchValue, props.filters);
   return {
     data: Products.find({}).fetch()
   }
