@@ -4,6 +4,7 @@ import Table from './Table'
 import TableToolbar from './TableToolbar'
 import TableHead from './TableHead'
 import Filter from './Filter'
+import SetColumns from './SetColumns'
 
 export {
   AppBar,
@@ -11,5 +12,6 @@ export {
   Table,
   TableToolbar,
   TableHead,
-  Filter
+  Filter,
+  SetColumns
 }

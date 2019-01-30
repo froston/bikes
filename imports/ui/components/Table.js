@@ -14,28 +14,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { TableToolbar, TableHead } from './'
 
-const desc = (a, b, orderBy) => {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-const stableSort = (array, cmp) => {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
-}
-
-const getSorting = (order, orderBy) => order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy)
-
 const styles = theme => ({
   root: {
     width: '100%',
@@ -56,32 +34,19 @@ const styles = theme => ({
   iconSmall: {
     fontSize: 20,
   },
-  proccess: {
+  progress: {
     flexGrow: 1,
   },
 });
 
 class EnhancedTable extends React.Component {
   state = {
-    order: 'asc',
-    orderBy: '_id',
     selected: [],
-    page: 0,
-    rowsPerPage: 10,
-  };
-
-  handleRequestSort = (e, property) => {
-    const orderBy = property;
-    let order = 'desc';
-    if (this.state.orderBy === property && this.state.order === 'desc') {
-      order = 'asc';
-    }
-    this.setState({ order, orderBy });
   };
 
   handleSelectAllClick = event => {
     if (event.target.checked) {
-      this.setState(state => ({ selected: this.props.data.map(n => n._id) }));
+      this.setState({ selected: this.props.data.map(n => n._id) });
       return;
     }
     this.setState({ selected: [] });
@@ -107,101 +72,84 @@ class EnhancedTable extends React.Component {
     this.setState({ selected: newSelected });
   };
 
-  handleChangePage = (e, page) => {
-    this.setState({ page });
-  };
-
-  handleChangeRowsPerPage = e => {
-    this.setState({ rowsPerPage: e.target.value });
-  };
-
   handleRemove = () => {
     this.props.handleRemove(this.state.selected)
-    this.state.selected.forEach(id => this.handleClick(null, id))
+    this.setState({ selected: [] });
   }
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { rowKey, classes, rows, data, title, handleCreate, handleEdit, handleSearch, handleFilter } = this.props;
-    const { order, orderBy, selected, rowsPerPage, page } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    const { rowKey, classes, rows, data, title } = this.props;
+    const { selected } = this.state;
     return (
       <Paper square className={classes.root}>
-        <div className={classes.proccess}>
-          <LinearProgress />
-        </div>
         <TableToolbar
           title={title}
           numSelected={selected.length}
-          handleCreate={handleCreate}
+          handleCreate={this.props.handleCreate}
           handleRemove={this.handleRemove}
-          handleSearch={handleSearch}
-          handleFilter={handleFilter}
+          handleSearch={this.props.handleSearch}
+          setColumns={this.props.setColumns}
+          filter={this.props.filter}
         />
         <div className={classes.tableWrapper}>
+          {!this.props.ready &&
+            <div className={classes.progress}>
+              <LinearProgress />
+            </div>
+          }
           <Table className={classes.table} aria-labelledby="tableTitle">
             <TableHead
               rows={rows}
               numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
+              order={this.props.order}
+              orderBy={this.props.orderBy}
               onSelectAllClick={this.handleSelectAllClick}
-              onRequestSort={this.handleRequestSort}
-              rowCount={data.length}
+              onRequestSort={this.props.handleSort}
+              rowCount={this.props.totalRows}
             />
             <TableBody>
-              {stableSort(data, getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(n => {
-                  const isSelected = this.isSelected(n[rowKey]);
-                  return (
-                    <TableRow
-                      hover
-                      key={n[rowKey]}
-                      onClick={event => this.handleClick(event, n[rowKey])}
-                      role="checkbox"
-                      aria-checked={isSelected}
-                      tabIndex={-1}
-                      selected={isSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox checked={isSelected} />
-                      </TableCell>
-                      {rows.map(row => {
-                        const text = row && row.render ? row.render(n[row.id], n) : String(n[row.id])
-                        return <TableCell key={row.id}>{text}</TableCell>
-                      })}
-                      <TableCell>
-                        <Button label="Edit" onClick={() => handleEdit(n[rowKey])}>
-                          <EditIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
-                          Upravit
+              {data.map(n => {
+                const isSelected = this.isSelected(n[rowKey]);
+                return (
+                  <TableRow
+                    hover
+                    key={n[rowKey]}
+                    onClick={event => this.handleClick(event, n[rowKey])}
+                    role="checkbox"
+                    aria-checked={isSelected}
+                    tabIndex={-1}
+                    selected={isSelected}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox checked={isSelected} />
+                    </TableCell>
+                    {rows.map(row => {
+                      const text = row && row.render ? row.render(n[row.id], n) : String(n[row.id])
+                      return row.visible && <TableCell key={row.id}>{text}</TableCell>
+                    })}
+                    <TableCell>
+                      <Button label="Edit" onClick={() => this.props.handleEdit(n[rowKey])}>
+                        <EditIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
+                        Upravit
                         </Button>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
         <TablePagination
           component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          backIconButtonProps={{
-            'aria-label': 'Předchozí stránka',
-          }}
-          nextIconButtonProps={{
-            'aria-label': 'Další stránka',
-          }}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          count={this.props.totalRows}
+          rowsPerPage={this.props.rowsPerPage}
+          page={this.props.page}
+          backIconButtonProps={{ 'aria-label': 'Předchozí stránka' }}
+          nextIconButtonProps={{ 'aria-label': 'Další stránka' }}
+          onChangePage={this.props.handlePage}
+          onChangeRowsPerPage={this.props.handleRowsPerPage}
         />
       </Paper>
     );
@@ -213,10 +161,21 @@ EnhancedTable.propTypes = {
   title: PropTypes.string.isRequired,
   rows: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
+  ready: PropTypes.bool,
+  page: PropTypes.number,
+  order: PropTypes.string,
+  orderBy: PropTypes.string,
+  rowsPerPage: PropTypes.number,
   handleCreate: PropTypes.func,
   handleRemove: PropTypes.func,
   handleEdit: PropTypes.func,
+  handleFilter: PropTypes.func,
+  handleSort: PropTypes.func,
+  handleSearch: PropTypes.func,
+  handlePage: PropTypes.func,
+  handleRowsPerPage: PropTypes.func,
   classes: PropTypes.object.isRequired,
+  filter: PropTypes.any,
 };
 
 export default withStyles(styles)(EnhancedTable);

@@ -14,7 +14,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { Filter } from '../components'
+import { SetColumns } from '../components'
 
 const toolbarStyles = theme => ({
   root: {
@@ -78,8 +78,9 @@ class EnhancedTableToolbar extends React.Component {
     }
     this.setState({ search: !this.state.search })
   }
+  toggleColumns = () => { }
   render() {
-    const { numSelected, classes, title } = this.props;
+    const { numSelected, classes, title, filter, setColumns } = this.props;
     const { search } = this.state
     return (
       <Toolbar
@@ -135,14 +136,19 @@ class EnhancedTableToolbar extends React.Component {
                     <SearchIcon />
                   </IconButton >
                 </Tooltip>
-                {this.props.handleFilter &&
+                {this.props.setColumns &&
+                  <Tooltip title="Nastavit sloupce">
+                    {setColumns}
+                  </Tooltip>
+                }
+                {this.props.filter &&
                   <Tooltip title="Filtr">
-                    <Filter handleFilter={this.props.handleFilter} />
+                    {filter}
                   </Tooltip>
                 }
                 {this.props.handleCreate &&
                   <Tooltip title="Vytvořit">
-                  <Button size="small" className={classNames(classes.button, classes.createButton)} onClick={this.props.handleCreate} >
+                    <Button size="small" className={classNames(classes.button, classes.createButton)} onClick={this.props.handleCreate} >
                       <AddIcon className={classNames(classes.leftIcon, classes.iconSmall)} /> Vytvořit nový
                   </Button>
                   </Tooltip>
@@ -161,7 +167,8 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   handleRemove: PropTypes.func,
   handleCreate: PropTypes.func,
-  handleFilter: PropTypes.func,
+  setColumns: PropTypes.any,
+  filter: PropTypes.any,
 };
 
 export default withStyles(toolbarStyles)(EnhancedTableToolbar);

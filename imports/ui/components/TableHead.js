@@ -26,7 +26,7 @@ class EnhancedTableHead extends React.Component {
           </TableCell>
           {rows.map(row => {
             return (
-              <TableCell
+              row.visible && <TableCell
                 key={row.id}
                 numeric={row.numeric}
                 padding={row.disablePadding ? 'none' : 'default'}

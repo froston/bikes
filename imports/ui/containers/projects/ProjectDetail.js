@@ -166,7 +166,6 @@ class ProjectDetail extends React.Component {
             <Button
               onClick={this.handleSubmit}
               variant="contained"
-              size="large"
               color="primary"
               className={classes.button}
             >
@@ -176,7 +175,6 @@ class ProjectDetail extends React.Component {
             <Button
               onClick={this.handleDelete}
               variant="outlined"
-              size="large"
               color="secondary"
               className={classes.button}
             >

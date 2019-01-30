@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withTracker } from 'meteor/react-meteor-data';
 import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import Popover from '@material-ui/core/Popover';
@@ -122,6 +121,7 @@ class Filter extends React.Component {
                     input={<Input name="category" id="cat-label-placeholder" />}
                     displayEmpty
                     name="category"
+                    disabled={secCats.length === 0}
                   >
                     {secCats.map(cat => {
                       return <MenuItem key={cat} value={cat}>{cat.trim()}</MenuItem>
@@ -139,6 +139,7 @@ class Filter extends React.Component {
 
 Filter.propTypes = {
   classes: PropTypes.object.isRequired,
+  handleFilter: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(Filter)

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import { AppBar, MainMenu } from './components'
-import { EshopDetail, EshopsList, ProjectsList, ProjectDetail, ProductDetail, ProductsContainer } from './containers'
+import { EshopDetail, EshopsList, ProjectsList, ProjectDetail, ProductDetail, ProductsList } from './containers'
 
 const drawerWidth = 240;
 
@@ -51,10 +51,11 @@ class Layout extends React.Component {
         </Drawer>
         <main className={classes.content}>
           <div className={classes.toolbar} />
+          <Redirect from="/" to="/projekty" />
           <Switch>
             <Route exact path="/projekty" component={ProjectsList} />
             <Route exact path="/projekty/novy" component={ProjectDetail} />
-            <Route exact path="/produkty" component={ProductsContainer} />
+            <Route exact path="/produkty" component={ProductsList} />
             <Route exact path="/produkty/:id" component={ProductDetail} />
             <Route exact path="/eshopy" component={EshopsList} />
             <Route path="/eshopy/novy" component={EshopDetail} />

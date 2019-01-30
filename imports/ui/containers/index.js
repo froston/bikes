@@ -1,5 +1,5 @@
 import { EshopsList, EshopDetail, Info } from './eshops'
-import { ProductsList, ProductDetail, ProductsContainer } from './products'
+import { ProductsList, ProductDetail } from './products'
 import { ProjectsList, ProjectDetail } from './projects'
 
 export {
@@ -10,5 +10,4 @@ export {
   ProjectDetail,
   ProductsList,
   ProductDetail,
-  ProductsContainer
 }
