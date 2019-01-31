@@ -36,9 +36,12 @@ class ProductList extends React.Component {
     columns: {}
   }
 
-
   componentDidMount() {
-    this.setState({ columns: { 'Náhled': true, 'Název': true } })
+    const columns = this.getRows().reduce((obj, item) => {
+      obj[item.label] = true
+      return obj
+    }, {})
+    this.setState({ columns })
   }
 
   getRows = () => {
@@ -56,11 +59,12 @@ class ProductList extends React.Component {
           />
         )
       },
+      { id: 'eshop', label: 'Eshop', visible: columns['Eshop'] },
       { id: 'name', label: 'Název', visible: columns['Název'] },
-      { id: 'category', label: 'Kategorie', render: c => c.map(cat => <Chip key={cat} label={cat} className={this.props.classes.chip} />) },
-      { id: 'price_mo', label: 'MO Cena' },
-      { id: 'price_vo', label: 'VO Cena' },
-      { id: 'amount', label: 'Skladem', render: (text, rec) => `${rec.amount} ${rec.unit}` },
+      { id: 'category', label: 'Kategorie', visible: columns['Kategorie'], render: c => c && c.map(cat => <Chip key={cat} label={cat} className={this.props.classes.chip} />) },
+      { id: 'price_mo', label: 'MO Cena', visible: columns['MO Cena'] },
+      { id: 'price_vo', label: 'VO Cena', visible: columns['VO Cena'] },
+      { id: 'amount', label: 'Skladem', visible: columns['Skladem'], render: (text, rec) => `${rec.amount} ${rec.unit}` },
     ];
   }
 
@@ -102,6 +106,7 @@ class ProductList extends React.Component {
     const columns = Object.assign({}, this.state.columns)
     columns[name] = value
     this.setState({ columns })
+    console.log(columns)
   }
 
   setConfig = (name, value) => {

@@ -127,7 +127,7 @@ class EnhancedTable extends React.Component {
                     </TableCell>
                     {rows.map(row => {
                       const text = row && row.render ? row.render(n[row.id], n) : String(n[row.id])
-                      return row.visible && <TableCell key={row.id}>{text}</TableCell>
+                      return row.visible !== false && <TableCell key={row.id}>{text}</TableCell>
                     })}
                     <TableCell>
                       <Button label="Edit" onClick={() => this.props.handleEdit(n[rowKey])}>
@@ -141,16 +141,18 @@ class EnhancedTable extends React.Component {
             </TableBody>
           </Table>
         </div>
-        <TablePagination
-          component="div"
-          count={this.props.totalRows}
-          rowsPerPage={this.props.rowsPerPage}
-          page={this.props.page}
-          backIconButtonProps={{ 'aria-label': 'Předchozí stránka' }}
-          nextIconButtonProps={{ 'aria-label': 'Další stránka' }}
-          onChangePage={this.props.handlePage}
-          onChangeRowsPerPage={this.props.handleRowsPerPage}
-        />
+        {this.props.handlePage &&
+          <TablePagination
+            component="div"
+            count={this.props.totalRows}
+            rowsPerPage={this.props.rowsPerPage}
+            page={this.props.page}
+            backIconButtonProps={{ 'aria-label': 'Předchozí stránka' }}
+            nextIconButtonProps={{ 'aria-label': 'Další stránka' }}
+            onChangePage={this.props.handlePage}
+            onChangeRowsPerPage={this.props.handleRowsPerPage}
+          />
+        }
       </Paper>
     );
   }
@@ -177,5 +179,9 @@ EnhancedTable.propTypes = {
   classes: PropTypes.object.isRequired,
   filter: PropTypes.any,
 };
+
+EnhancedTable.defaultProps = {
+  rowKey: '_id'
+}
 
 export default withStyles(styles)(EnhancedTable);

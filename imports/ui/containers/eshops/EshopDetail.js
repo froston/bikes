@@ -67,6 +67,7 @@ class EshopDetail extends React.Component {
     ean: '',
     producer: '',
     category: '',
+    ignoreFirst: false,
     delimiter: '',
     price_vo: '',
     price_mo: '',
@@ -144,7 +145,7 @@ class EshopDetail extends React.Component {
                 <Info handleChange={this.handleChange} handleCheck={this.handleCheck} values={this.state} />
               </div>
               <div style={{ display: value === 1 ? 'block' : 'none' }}>
-                <XmlAtr handleChange={this.handleChange} values={this.state} />
+                <XmlAtr handleChange={this.handleChange} handleCheck={this.handleCheck} values={this.state} />
               </div>
             </form>
           </CardContent>

@@ -51,10 +51,11 @@ class Layout extends React.Component {
         </Drawer>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Redirect from="/" to="/projekty" />
+          <Redirect exact from="/" to="/projekty" />
           <Switch>
             <Route exact path="/projekty" component={ProjectsList} />
             <Route exact path="/projekty/novy" component={ProjectDetail} />
+            <Route exact path="/projekty/:id" component={ProjectDetail} />
             <Route exact path="/produkty" component={ProductsList} />
             <Route exact path="/produkty/:id" component={ProductDetail} />
             <Route exact path="/eshopy" component={EshopsList} />

@@ -60,6 +60,7 @@ class ProductDetail extends React.Component {
     price_vo: '',
     producer: '',
     unit: '',
+    eshop: ''
   }
 
   componentDidMount() {
@@ -93,13 +94,13 @@ class ProductDetail extends React.Component {
 
   render() {
     const { classes } = this.props
-    const { code, ean, name, category, photo, price_mo, price_vo, producer, amount, unit } = this.state
+    const { code, ean, name, category, photo, price_mo, price_vo, producer, amount, unit, eshop } = this.state
     return (
       <Paper square>
         <Card>
           <CardContent>
             <Typography variant="h4" color="inherit" noWrap>
-              {name}
+              {eshop} - {name}
             </Typography>
             <div className={classes.categories}>
               {category && category.map((cat, index) => (

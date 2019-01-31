@@ -27,8 +27,9 @@ class SetColumns extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  handleClick = () => {
-  };
+  handleChange = (name, value) => {
+    this.props.handleChange(name, value)
+  }
 
   render() {
     const { anchorEl } = this.state;
@@ -52,10 +53,11 @@ class SetColumns extends React.Component {
         >
           {Object.keys(columns).map(key => {
             return (
-              <MenuItem onClick={() => this.props.handleChange(key, !!columns[key])}>
+              <MenuItem key={key}>
                 <FormControlLabel
                   control={<Checkbox checked={columns[key]} />}
                   label={key}
+                  onChange={() => this.handleChange(key, !columns[key])}
                 />
               </MenuItem>
             )

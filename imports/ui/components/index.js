@@ -5,6 +5,7 @@ import TableToolbar from './TableToolbar'
 import TableHead from './TableHead'
 import Filter from './Filter'
 import SetColumns from './SetColumns'
+import ProductsModal from './ProductsModal'
 
 export {
   AppBar,
@@ -13,5 +14,6 @@ export {
   TableToolbar,
   TableHead,
   Filter,
-  SetColumns
+  SetColumns,
+  ProductsModal
 }

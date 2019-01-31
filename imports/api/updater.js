@@ -13,7 +13,7 @@ const opt = {
 
 const getTagValue = (item, tagName) => xpath.find(item, `//${tagName}`)[0]
 
-const saveItem = (item, attrs) => {
+const saveItem = (eshop, item, attrs) => {
   const code = getTagValue(item, attrs.id)
   const price_vo = getTagValue(item, attrs.price_vo)
   const price_mo = getTagValue(item, attrs.price_mo)
@@ -30,6 +30,10 @@ const saveItem = (item, attrs) => {
     let category = getTagValue(item, attrs.category)
     if (category && attrs.delimiter) {
       category = category.split(attrs.delimiter)
+      if (attrs.ignoreFirst) {
+        category.shift()
+        category[0] = category[0] && `${category[0].trim()} `
+      }
     }
     const itemToInsert = {
       name: getTagValue(item, attrs.name),
@@ -42,6 +46,7 @@ const saveItem = (item, attrs) => {
       amount: amount,
       unit: getTagValue(item, attrs.unit),
       photo: getTagValue(item, attrs.photo),
+      eshop
     }
     Products.insert(itemToInsert)
     return "inserted"
@@ -77,7 +82,7 @@ const updateEshop = (eshop) => {
           if (err) reject(err)
           const items = xpath.find(json, `//${attrs.item}`);
           items.forEach(item => {
-            const res = saveItem(item, attrs)
+            const res = saveItem(eshop.name, item, attrs)
             if (res === "inserted") inserted++
             if (res === "updated") updated++
           })

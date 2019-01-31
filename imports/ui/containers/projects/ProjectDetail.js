@@ -3,63 +3,39 @@ import { withRouter } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles';
 import { Tracker } from 'meteor/tracker'
 import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
-import ClearIcon from '@material-ui/icons/Clear';
+import { Projects } from '../../../api/projects';
 import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Grid from '@material-ui/core/Grid';
-import Chip from '@material-ui/core/Chip';
-import Typography from '@material-ui/core/Typography';
-import { Products } from '../../../api/products';
+import { ProductsModal } from '../../components'
 
 const styles = theme => ({
-  root: {
-    flexGrow: 1,
-  },
   container: {
     display: 'flex',
     flexWrap: 'wrap',
   },
-  categories: {
-    margin: '10px 0 30px'
-  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: '100%',
-  },
-  img: {
-    width: 'initial',
-    minWidth: 'initial',
-    maxWidth: '42em',
-    maxHeight: '15em',
+    width: 500,
   },
   button: {
     margin: theme.spacing.unit,
   },
   leftIcon: {
     marginRight: theme.spacing.unit,
-  },
-  chip: {
-    margin: theme.spacing.unit,
-  },
+  }
 })
 
 class ProjectDetail extends React.Component {
   state = {
-    _id: '',
-    code: '',
     name: '',
-    ean: '',
-    photo: '',
-    price_mo: '',
-    price_vo: '',
-    producer: '',
-    unit: '',
+    modal: false
   }
 
   componentDidMount() {
@@ -71,101 +47,66 @@ class ProjectDetail extends React.Component {
 
   loadData = _id => {
     Tracker.autorun(() => {
-      Meteor.subscribe('product', _id);
-      let product = Products.findOne(_id);
-      if (product) {
-        this.setState({ ...product });
+      Meteor.subscribe('project', _id);
+      let project = Projects.findOne(_id);
+      if (project) {
+        this.setState({
+          _id: project._id,
+          name: project.name,
+        });
       }
     });
   }
 
   handleSubmit = e => {
     e.preventDefault()
-    Meteor.call('products.save', this.state);
-    this.props.history.push('/produkty')
+    Meteor.call('projects.save', this.state);
+    this.props.history.push('/projekty')
   }
 
-  handleDelete = e => {
-    e.preventDefault()
-    Meteor.call('products.remove', this.state._id);
-    this.props.history.push('/produkty')
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.value });
+  };
+
+  openModal = () => {
+    this.setState({ modal: true })
   }
 
   render() {
     const { classes } = this.props
-    const { code, ean, name, category, photo, price_mo, price_vo, producer, amount, unit } = this.state
+    const { name, modal } = this.state
     return (
       <Paper square>
+        <Tabs
+          value={0}
+          indicatorColor="primary"
+          textColor="primary"
+          onChange={this.changeTab}
+        >
+          <Tab label="Obecné" />
+        </Tabs>
         <Card>
           <CardContent>
-            <Typography variant="h4" color="inherit" noWrap>
-              {name}
-            </Typography>
-            <div className={classes.categories}>
-              {category && category.map((cat, index) => (
-                <Chip
-                  key={index}
-                  label={cat}
-                  className={classes.chip}
-                />
-              ))}
-            </div>
-            <div className={classes.root}>
-              <Grid container spacing={40}>
-                <Grid item sm={3}>
-                  <img src={photo} alt="Náhled produktu" className={classes.img} />
-                </Grid >
-                <Grid item sm={4}>
+            <form noValidate autoComplete="off">
+              <div>
+                <div className={classes.container}>
                   <TextField
-                    label="Kod"
+                    label="Nazev projetku"
                     className={classes.textField}
-                    value={code}
-                    margin="normal"
-                    disabled
-                  />
-                  <TextField
-                    label="Ean"
-                    className={classes.textField}
-                    value={ean}
+                    value={name}
+                    onChange={this.handleChange('name')}
                     margin="normal"
                   />
-                  <TextField
-                    label="Vyrobce"
-                    className={classes.textField}
-                    value={producer}
-                    margin="normal"
-                  />
-                </Grid>
-                <Grid item sm={4}>
-                  <TextField
-                    label="Skladem"
-                    className={classes.textField}
-                    value={String(amount)}
-                    margin="normal"
-                    InputProps={{
-                      endAdornment: <InputAdornment position="start">{unit}</InputAdornment>,
-                    }}
-                  />
-                  <TextField
-                    label="Cena MO"
-                    className={classes.textField}
-                    value={price_mo}
-                    margin="normal"
-                  />
-                  <TextField
-                    label="Cena VO"
-                    className={classes.textField}
-                    value={price_vo}
-                    margin="normal"
-                  />
-                </Grid >
-              </Grid >
-            </ div>
+                </div>
+              </div>
+            </form>
+            <ProductsModal open={modal} handleClose={() => { alert(1) }} />
           </CardContent>
           <CardActions>
             <Button
               onClick={this.handleSubmit}
               variant="contained"
+              size="large"
               color="primary"
               className={classes.button}
             >
@@ -173,17 +114,18 @@ class ProjectDetail extends React.Component {
               Uložit
             </Button>
             <Button
-              onClick={this.handleDelete}
-              variant="outlined"
-              color="secondary"
+              onClick={this.openModal}
+              variant="contained"
+              size="large"
+              color="primary"
               className={classes.button}
             >
-              <ClearIcon className={classes.leftIcon} />
-              Smazat
+              <SaveIcon className={classes.leftIcon} />
+              Najit Neco
             </Button>
           </CardActions>
         </Card>
-      </Paper >
+      </Paper>
     );
   }
 }

@@ -1,13 +1,13 @@
 import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
+import moment from 'moment'
 import { Projects } from '../../../api/projects';
 import { Table } from '../../components'
 
 class ProjectsList extends React.Component {
   rows = [
-    { id: 'name', numeric: false, disablePadding: true, label: 'Název' },
-    { id: 'date', numeric: true, disablePadding: false, label: 'Datum vytvoření' },
-    { id: 'completed', numeric: true, disablePadding: false, label: 'Objednáno' },
+    { id: 'name', label: 'Název' },
+    { id: 'date', label: 'Datum vytvoření', render: date => moment(date).format("DD.MM.YYYY") },
   ];
   handleCreate = () => {
     const { match, history } = this.props
@@ -21,12 +21,13 @@ class ProjectsList extends React.Component {
     history.push(`${match.url}/${id}`)
   }
   render() {
-    const { data } = this.props;
+    const { data, ready } = this.props;
     return (
       <Table
         title="Seznam Projektu"
         rows={this.rows}
         data={data}
+        ready={ready}
         handleCreate={this.handleCreate}
         handleRemove={this.handleRemove}
         handleEdit={this.handleEdit}
@@ -36,7 +37,9 @@ class ProjectsList extends React.Component {
 }
 
 export default withTracker(() => {
+  const handle = Meteor.subscribe('projects')
   return {
     data: Projects.find({}).fetch(),
+    ready: handle.ready(),
   };
 })(ProjectsList);

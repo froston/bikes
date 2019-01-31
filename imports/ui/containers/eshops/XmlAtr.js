@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
@@ -16,12 +18,15 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     width: '100%',
+  },
+  checkbox: {
+    padding: 30
   }
 })
 
 class XmlAtr extends React.Component {
   render() {
-    const { classes, handleChange, values } = this.props;
+    const { classes, handleChange, handleCheck, values } = this.props;
     return (
       <div className={classes.root}>
         <Grid container spacing={16}>
@@ -86,13 +91,29 @@ class XmlAtr extends React.Component {
           </Grid>
 
           <Grid item sm={12} md={6}>
-            <TextField
-              label="Oddělovač kategorie"
-              className={classes.textField}
-              value={values.delimiter}
-              onChange={handleChange('delimiter')}
-              margin="normal"
-            />
+            <Grid container spacing={16}>
+              <Grid item sm={12} md={8}>
+                <TextField
+                  label="Oddělovač kategorie"
+                  className={classes.textField}
+                  value={values.delimiter}
+                  onChange={handleChange('delimiter')}
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item sm={12} md={4}>
+                <FormControlLabel
+                  label="Ignorovat prvni kategorii"
+                  className={classes.checkbox}
+                  control={
+                    <Checkbox
+                      checked={values.ignoreFirst}
+                      onChange={handleCheck('ignoreFirst')}
+                    />
+                  }
+                />
+              </Grid>
+            </Grid>
           </Grid>
 
           <Grid item sm={12} md={6}>

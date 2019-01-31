@@ -26,17 +26,12 @@ class EnhancedTableHead extends React.Component {
           </TableCell>
           {rows.map(row => {
             return (
-              row.visible && <TableCell
+              row.visible !== false && <TableCell
                 key={row.id}
-                numeric={row.numeric}
                 padding={row.disablePadding ? 'none' : 'default'}
                 sortDirection={orderBy === row.id ? order : false}
               >
-                <Tooltip
-                  title="Sort"
-                  placement={row.numeric ? 'bottom-end' : 'bottom-start'}
-                  enterDelay={300}
-                >
+                <Tooltip title="Sort" enterDelay={300}>
                   <TableSortLabel
                     active={orderBy === row.id}
                     direction={order}
@@ -56,13 +51,13 @@ class EnhancedTableHead extends React.Component {
 }
 
 EnhancedTableHead.propTypes = {
-  rows: PropTypes.array.isRequired,
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.string.isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
+  rows: PropTypes.array,
+  numSelected: PropTypes.number,
+  onRequestSort: PropTypes.func,
+  onSelectAllClick: PropTypes.func,
+  order: PropTypes.string,
+  orderBy: PropTypes.string,
+  rowCount: PropTypes.number,
 };
 
 export default EnhancedTableHead

@@ -17,7 +17,7 @@ const ApplicationBar = (props) => {
     <AppBar position="fixed" className={classes.appBar}>
       <Toolbar>
         <Typography variant="h6" color="inherit" noWrap>
-          Skládka Kol
+          Jakubkolo
         </Typography>
       </Toolbar>
     </AppBar>
