@@ -34,17 +34,17 @@ if (Meteor.isServer) {
   Meteor.methods({
     'products.getMainCat'() {
       const cats = Meteor.wrapAsync((callback) => {
-        Products.rawCollection().distinct('category', callback)
+        Products.rawCollection().distinct('category.0', callback)
       })();
       cats.sort((a, b) => a - b)
-      return cats.filter(cat => cat && !cat.startsWith(' '))
+      return cats
     },
     'products.getSecCat'(mainCat) {
       const cats = Meteor.wrapAsync((callback) => {
-        Products.rawCollection().distinct('category', { category: { $in: [mainCat] } }, callback)
+        Products.rawCollection().distinct('category.1', { category: { $in: [mainCat] } }, callback)
       })();
       cats.sort((a, b) => a - b)
-      return cats.filter(c => c !== mainCat)
+      return cats
     }
   })
 }

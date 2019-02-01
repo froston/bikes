@@ -20,7 +20,7 @@ const styles = theme => ({
     width: '100%',
   },
   checkbox: {
-    padding: 30
+    padding: '15px 0'
   }
 })
 
@@ -29,8 +29,8 @@ class XmlAtr extends React.Component {
     const { classes, handleChange, handleCheck, values } = this.props;
     return (
       <div className={classes.root}>
-        <Grid container spacing={16}>
-          <Grid item sm={12} md={6}>
+        <Grid container spacing={40}>
+          <Grid item sm={6} md={4}>
             <TextField
               label="Položka"
               className={classes.textField}
@@ -40,7 +40,7 @@ class XmlAtr extends React.Component {
             />
           </Grid>
 
-          <Grid item sm={12} md={6}>
+          <Grid item sm={6} md={4}>
             <TextField
               label="Id"
               className={classes.textField}
@@ -50,7 +50,7 @@ class XmlAtr extends React.Component {
             />
           </Grid>
 
-          <Grid item sm={12} md={6}>
+          <Grid item sm={6} md={4}>
             <TextField
               label="Název položky"
               className={classes.textField}
@@ -60,7 +60,7 @@ class XmlAtr extends React.Component {
             />
           </Grid>
 
-          <Grid item sm={12} md={6}>
+          <Grid item sm={6} md={4}>
             <TextField
               label="EAN"
               className={classes.textField}
@@ -70,7 +70,7 @@ class XmlAtr extends React.Component {
             />
           </Grid>
 
-          <Grid item sm={12} md={6}>
+          <Grid item sm={6} md={4}>
             <TextField
               label="Výrobce"
               className={classes.textField}
@@ -80,30 +80,20 @@ class XmlAtr extends React.Component {
             />
           </Grid>
 
-          <Grid item sm={12} md={6}>
-            <TextField
-              label="Kategorie"
-              className={classes.textField}
-              value={values.category}
-              onChange={handleChange('category')}
-              margin="normal"
-            />
-          </Grid>
-
-          <Grid item sm={12} md={6}>
-            <Grid container spacing={16}>
-              <Grid item sm={12} md={8}>
+          <Grid item sm={6} md={4}>
+            <Grid container>
+              <Grid item sm={6} md={8}>
                 <TextField
-                  label="Oddělovač kategorie"
+                  label="Kategorie"
                   className={classes.textField}
-                  value={values.delimiter}
-                  onChange={handleChange('delimiter')}
+                  value={values.category}
+                  onChange={handleChange('category')}
                   margin="normal"
                 />
               </Grid>
-              <Grid item sm={12} md={4}>
+              <Grid item sm={6} md={4}>
                 <FormControlLabel
-                  label="Ignorovat prvni kategorii"
+                  label="Ignorovat první"
                   className={classes.checkbox}
                   control={
                     <Checkbox
@@ -116,7 +106,17 @@ class XmlAtr extends React.Component {
             </Grid>
           </Grid>
 
-          <Grid item sm={12} md={6}>
+          <Grid item sm={6} md={4}>
+            <TextField
+              label="Oddělovač kategorie"
+              className={classes.textField}
+              value={values.delimiter}
+              onChange={handleChange('delimiter')}
+              margin="normal"
+            />
+          </Grid>
+
+          <Grid item sm={6} md={4}>
             <TextField
               label="VOC Cena"
               className={classes.textField}
@@ -126,7 +126,7 @@ class XmlAtr extends React.Component {
             />
           </Grid>
 
-          <Grid item sm={12} md={6}>
+          <Grid item sm={6} md={4}>
             <TextField
               label="MOC Cena"
               className={classes.textField}
@@ -136,7 +136,7 @@ class XmlAtr extends React.Component {
             />
           </Grid>
 
-          <Grid item sm={12} md={6}>
+          <Grid item sm={6} md={4}>
             <TextField
               label="Množství"
               className={classes.textField}
@@ -146,7 +146,7 @@ class XmlAtr extends React.Component {
             />
           </Grid>
 
-          <Grid item sm={12} md={6}>
+          <Grid item sm={6} md={4}>
             <TextField
               label="Jednotka"
               className={classes.textField}
@@ -156,7 +156,7 @@ class XmlAtr extends React.Component {
             />
           </Grid>
 
-          <Grid item sm={12} md={6}>
+          <Grid item sm={6} md={4}>
             <TextField
               label="Fotka"
               className={classes.textField}

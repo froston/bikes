@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { parseString } from 'xml2js'
 import xpath from 'xml2js-xpath'
 import request from 'request'
+import utf8 from 'utf8'
 import { Eshops } from './eshops'
 import { Products } from './products'
 
@@ -36,7 +37,7 @@ const saveItem = (eshop, item, attrs) => {
       }
     }
     const itemToInsert = {
-      name: getTagValue(item, attrs.name),
+      name: utf8.encode(getTagValue(item, attrs.name)),
       ean: getTagValue(item, attrs.ean),
       code: getTagValue(item, attrs.id),
       producer: getTagValue(item, attrs.producer),
@@ -71,10 +72,7 @@ const updateEshop = (eshop) => {
       const attrs = eshop.attributes
       //eshop.url = 'http://localhost:5000'
       const options = {
-        url: eshop.url,
-        headers: {
-          'Content-Type': 'text/html; windows-1250'
-        }
+        url: eshop.url
       }
       request(options, Meteor.bindEnvironment((err, data, body) => {
         if (err) reject(err)

@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import { Projects } from '../../../api/projects';
 import TextField from '@material-ui/core/TextField';
-import { ProductsModal } from '../../components'
+import { ProjectItems } from './'
 
 const styles = theme => ({
   container: {
@@ -29,12 +29,19 @@ const styles = theme => ({
   },
   leftIcon: {
     marginRight: theme.spacing.unit,
+  },
+  cardActions: {
+    background: '#f5f5f5',
+    display: 'flex',
+    justifyContent: 'space-between'
   }
 })
 
 class ProjectDetail extends React.Component {
   state = {
+    tab: 0,
     name: '',
+    items: [],
     modal: false
   }
 
@@ -53,6 +60,7 @@ class ProjectDetail extends React.Component {
         this.setState({
           _id: project._id,
           name: project.name,
+          items: project.items || [],
         });
       }
     });
@@ -64,31 +72,34 @@ class ProjectDetail extends React.Component {
     this.props.history.push('/projekty')
   }
 
+  changeTab = (e, tab) => this.setState({ tab })
+
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
   };
 
-  openModal = () => {
-    this.setState({ modal: true })
+  addItem = (item) => {
+    this.setState({ items: this.state.items.concat(item) })
   }
 
   render() {
     const { classes } = this.props
-    const { name, modal } = this.state
+    const { tab, name, items } = this.state
     return (
       <Paper square>
         <Tabs
-          value={0}
+          value={tab}
           indicatorColor="primary"
           textColor="primary"
           onChange={this.changeTab}
         >
           <Tab label="Obecné" />
+          <Tab label="Dily" />
         </Tabs>
         <Card>
           <CardContent>
             <form noValidate autoComplete="off">
-              <div>
+              <div style={{ display: tab === 0 ? 'block' : 'none' }}>
                 <div className={classes.container}>
                   <TextField
                     label="Nazev projetku"
@@ -99,14 +110,17 @@ class ProjectDetail extends React.Component {
                   />
                 </div>
               </div>
+              <div style={{ display: tab === 1 ? 'block' : 'none' }}>
+                <div className={classes.container}>
+                  <ProjectItems items={items} addItem={this.addItem} />
+                </div>
+              </div>
             </form>
-            <ProductsModal open={modal} handleClose={() => { alert(1) }} />
           </CardContent>
-          <CardActions>
+          <CardActions className={classes.cardActions}>
             <Button
               onClick={this.handleSubmit}
               variant="contained"
-              size="large"
               color="primary"
               className={classes.button}
             >
@@ -114,14 +128,12 @@ class ProjectDetail extends React.Component {
               Uložit
             </Button>
             <Button
-              onClick={this.openModal}
-              variant="contained"
-              size="large"
-              color="primary"
+              onClick={this.toggleModal}
+              color="secondary"
               className={classes.button}
             >
               <SaveIcon className={classes.leftIcon} />
-              Najit Neco
+              Smazat
             </Button>
           </CardActions>
         </Card>

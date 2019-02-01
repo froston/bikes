@@ -47,6 +47,11 @@ const styles = theme => ({
   chip: {
     margin: theme.spacing.unit,
   },
+  cardActions: {
+    background: '#f5f5f5',
+    display: 'flex',
+    justifyContent: 'space-between'
+  }
 })
 
 class ProductDetail extends React.Component {
@@ -163,11 +168,10 @@ class ProductDetail extends React.Component {
               </Grid >
             </ div>
           </CardContent>
-          <CardActions>
+          <CardActions className={classes.cardActions}>
             <Button
               onClick={this.handleSubmit}
               variant="contained"
-              size="large"
               color="primary"
               className={classes.button}
             >
@@ -176,10 +180,8 @@ class ProductDetail extends React.Component {
             </Button>
             <Button
               onClick={this.handleDelete}
-              variant="outlined"
-              size="large"
-              color="secondary"
               className={classes.button}
+              color="secondary"
             >
               <ClearIcon className={classes.leftIcon} />
               Smazat

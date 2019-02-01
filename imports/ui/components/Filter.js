@@ -62,7 +62,7 @@ class Filter extends React.Component {
   handleMainChange = event => {
     const catMain = event.target.value
     this.loadSecCats(catMain)
-    this.setState({ catMain }, this.handleFilter);
+    this.setState({ catMain, catSecond: '' }, this.handleFilter);
   };
 
   handleSecChange = event => {
@@ -98,7 +98,7 @@ class Filter extends React.Component {
             <Grid container spacing={24}>
               <Grid item xs={12}>
                 <FormControl className={classes.formControl}>
-                  <InputLabel shrink htmlFor="cat-label-placeholder">Hlavni Kategorie</InputLabel>
+                  <InputLabel shrink htmlFor="cat-label-placeholder">Hlavní Kategorie</InputLabel>
                   <Select
                     value={catMain}
                     onChange={this.handleMainChange}
@@ -114,7 +114,7 @@ class Filter extends React.Component {
               </Grid>
               <Grid item xs={12}>
                 <FormControl className={classes.formControl}>
-                  <InputLabel shrink htmlFor="cat-label-placeholder">Vedlejsi Kategorie</InputLabel>
+                  <InputLabel shrink htmlFor="cat-label-placeholder">Vedlejší Kategorie</InputLabel>
                   <Select
                     value={catSecond}
                     onChange={this.handleSecChange}

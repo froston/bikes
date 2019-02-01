@@ -5,6 +5,10 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
+import Button from '@material-ui/core/Button';
+import EditIcon from '@material-ui/icons/Create';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { Products } from '../../../api/products';
 import { Table, Filter, SetColumns } from '../../components'
 
@@ -19,6 +23,10 @@ const styles = theme => ({
   },
   chip: {
     margin: theme.spacing.unit,
+  },
+  iconSmall: {
+    marginRight: theme.spacing.unit,
+    fontSize: 20,
   },
 })
 
@@ -45,6 +53,7 @@ class ProductList extends React.Component {
   }
 
   getRows = () => {
+    const { classes } = this.props
     const { columns } = this.state
     return [
       {
@@ -55,7 +64,7 @@ class ProductList extends React.Component {
           <Avatar
             alt="Foto produktu"
             src={photo}
-            className={this.props.classes.avatar}
+            className={classes.avatar}
           />
         )
       },
@@ -65,16 +74,31 @@ class ProductList extends React.Component {
       { id: 'price_mo', label: 'MO Cena', visible: columns['MO Cena'] },
       { id: 'price_vo', label: 'VO Cena', visible: columns['VO Cena'] },
       { id: 'amount', label: 'Skladem', visible: columns['Skladem'], render: (text, rec) => `${rec.amount} ${rec.unit}` },
+      {
+        id: 'actions', label: '', render: (text, rec) => {
+          return (
+            <IconButton onClick={e => this.handleRemove(e, rec._id)}>
+              <DeleteIcon />
+            </IconButton>
+          )
+        }
+      }
     ];
   }
 
-  handleRemove = ids => {
-    ids.forEach(id => Meteor.call('products.remove', id))
+  handleRemove = (e, id) => {
+    e.preventDefault()
+    e.stopPropagation()
+    Meteor.call('products.remove', id)
   }
 
-  handleEdit = (id) => {
-    const { match, history } = this.props
-    history.push(`${match.url}/${id}`)
+  handleClick = (item) => {
+    if (!!this.props.handleClick) {
+      this.props.handleClick(item)
+    } else {
+      const { match, history } = this.props
+      history.push(`${match.url}/${item._id}`)
+    }
   }
 
   handleSearch = e => {
@@ -106,7 +130,6 @@ class ProductList extends React.Component {
     const columns = Object.assign({}, this.state.columns)
     columns[name] = value
     this.setState({ columns })
-    console.log(columns)
   }
 
   setConfig = (name, value) => {
@@ -130,12 +153,11 @@ class ProductList extends React.Component {
         orderBy={config.orderBy}
         rowsPerPage={config.rowsPerPage}
         totalRows={totalRows}
-        handleRemove={this.handleRemove}
-        handleEdit={this.handleEdit}
         handleSearch={this.handleSearch}
         handlePage={this.handlePage}
         handleRowsPerPage={this.handleRowsPerPage}
         handleSort={this.handleSort}
+        handleClick={this.handleClick}
         setColumns={
           <SetColumns
             columns={this.state.columns}

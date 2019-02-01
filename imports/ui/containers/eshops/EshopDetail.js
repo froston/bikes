@@ -49,6 +49,9 @@ const styles = theme => ({
   },
   leftIcon: {
     marginRight: theme.spacing.unit,
+  },
+  cardActions: {
+    background: '#f5f5f5'
   }
 })
 
@@ -149,11 +152,10 @@ class EshopDetail extends React.Component {
               </div>
             </form>
           </CardContent>
-          <CardActions>
+          <CardActions className={classes.cardActions}>
             <Button
               onClick={this.handleSubmit}
               variant="contained"
-              size="large"
               color="primary"
               className={classes.button}
             >
@@ -164,7 +166,6 @@ class EshopDetail extends React.Component {
               <div className={classes.wrapper}>
                 <Button
                   onClick={this.handleUpdate}
-                  size="large"
                   color="primary"
                   className={classes.button}
                   disabled={updatting}

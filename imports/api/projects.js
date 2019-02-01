@@ -25,6 +25,7 @@ Meteor.methods({
     } else {
       Projects.insert({
         name: project.name,
+        items: [],
         createdAt: new Date(),
         lastUpdate: new Date(),
       });

@@ -1,54 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Modal from '@material-ui/core/Modal';
+import Dialog from '@material-ui/core/Dialog';
+import Slide from '@material-ui/core/Slide';
+import { ProductsList } from '../containers';
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
 }
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
-
-const styles = theme => ({
-  paper: {
-    position: 'absolute',
-    width: theme.spacing.unit * 50,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    outline: 'none',
-  },
-});
 
 class ProductsModal extends React.Component {
   render() {
-    const { classes, open, handleClose } = this.props;
+    const { open, handleClose, handleClick } = this.props;
     return (
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+      <Dialog
+        fullScreen
         open={open}
         onClose={handleClose}
+        TransitionComponent={Transition}
       >
-        <div style={getModalStyle()} className={classes.paper}>
-          <Typography variant="h6" id="modal-title">
-            Text in a modal
-            </Typography>
-          <Typography variant="subtitle1" id="simple-modal-description">
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
-        </div>
-      </Modal>
+        <ProductsList handleClick={handleClick} />
+      </Dialog>
     );
   }
 }
@@ -57,4 +28,4 @@ ProductsModal.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ProductsModal);
+export default ProductsModal;

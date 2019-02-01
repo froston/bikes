@@ -1,5 +1,7 @@
 import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment'
 import { Projects } from '../../../api/projects';
 import { Table } from '../../components'
@@ -7,18 +9,32 @@ import { Table } from '../../components'
 class ProjectsList extends React.Component {
   rows = [
     { id: 'name', label: 'Název' },
+    { id: 'desc', label: 'Popis' },
+    { id: 'totalPrice', label: 'Celková cena' },
+    { id: 'status', label: 'Status objednávky' },
     { id: 'date', label: 'Datum vytvoření', render: date => moment(date).format("DD.MM.YYYY") },
+    {
+      id: 'actions', label: '', render: (text, rec) => {
+        return (
+          <IconButton onClick={e => this.handleRemove(e, rec._id)}>
+            <DeleteIcon />
+          </IconButton>
+        )
+      }
+    }
   ];
   handleCreate = () => {
     const { match, history } = this.props
     history.push(`${match.url}/novy`)
   }
-  handleRemove = ids => {
-    ids.forEach(id => Meteor.call('projects.remove', id))
+  handleRemove = (e, id) => {
+    e.preventDefault()
+    e.stopPropagation()
+    Meteor.call('projects.remove', id)
   }
-  handleEdit = (id) => {
+  handleEdit = project => {
     const { match, history } = this.props
-    history.push(`${match.url}/${id}`)
+    history.push(`${match.url}/${project._id}`)
   }
   render() {
     const { data, ready } = this.props;
@@ -28,9 +44,9 @@ class ProjectsList extends React.Component {
         rows={this.rows}
         data={data}
         ready={ready}
+        handleClick={this.handleEdit}
         handleCreate={this.handleCreate}
         handleRemove={this.handleRemove}
-        handleEdit={this.handleEdit}
       />
     );
   }
