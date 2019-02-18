@@ -73,21 +73,16 @@ const updateEshop = (eshop) => {
       const options = {
         url: eshop.url
       }
-      console.log(`1. Updatting eshop: ${eshop.url}`)
       request(options, Meteor.bindEnvironment((err, data, body) => {
         if (err) reject(err)
-        console.log(`2. Eshop loaded!`)
         parseString(body, opt, (err, json) => {
           if (err) reject(err)
           const items = xpath.find(json, `//${attrs.item}`);
-          console.log(`3. Eshop parsed - ${items && items.length} items.`)
           items.forEach(item => {
-            console.log(`4. Saving item ...`)
             const res = saveItem(eshop.name, item, attrs)
             if (res === "inserted") inserted++
             if (res === "updated") updated++
           })
-          console.log(`5. Update done I - ${inserted} and U - ${updated}`)
           resolve({ inserted, updated })
         })
       }));
