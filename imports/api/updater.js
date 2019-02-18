@@ -2,7 +2,6 @@ import { Meteor } from 'meteor/meteor'
 import { parseString } from 'xml2js'
 import xpath from 'xml2js-xpath'
 import request from 'request'
-import utf8 from 'utf8'
 import { Eshops } from './eshops'
 import { Products } from './products'
 
@@ -37,7 +36,7 @@ const saveItem = (eshop, item, attrs) => {
       }
     }
     const itemToInsert = {
-      name: utf8.encode(getTagValue(item, attrs.name)),
+      name: getTagValue(item, attrs.name),
       ean: getTagValue(item, attrs.ean),
       code: getTagValue(item, attrs.id),
       producer: getTagValue(item, attrs.producer),
