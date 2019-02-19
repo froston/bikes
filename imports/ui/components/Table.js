@@ -72,7 +72,7 @@ class EnhancedTable extends React.Component {
               onRequestSort={this.props.handleSort}
             />
             <TableBody>
-              {data.map(n => {
+              {data.map((n, index) => {
                 return (
                   <TableRow
                     hover
@@ -83,7 +83,7 @@ class EnhancedTable extends React.Component {
                     selected={selected == n._id}
                   >
                     {rows.map(row => {
-                      const text = row && row.render ? row.render(n[row.id], n) : String(n[row.id])
+                      const text = row && row.render ? row.render(n[row.id], n, index) : String(n[row.id])
                       return row.visible !== false && <TableCell key={row.id}>{text}</TableCell>
                     })}
                   </TableRow>

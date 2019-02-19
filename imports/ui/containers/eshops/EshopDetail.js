@@ -19,8 +19,7 @@ import XmlAtr from './XmlAtr'
 
 const styles = theme => ({
   wrapper: {
-    margin: theme.spacing.unit,
-    position: 'relative',
+    position: 'relative'
   },
   container: {
     display: 'flex',
@@ -51,7 +50,13 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
   },
   cardActions: {
-    background: '#f5f5f5'
+    background: '#f5f5f5',
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  leftButtons: {
+    display: 'flex',
+    justifyContent: 'left',
   }
 })
 
@@ -127,6 +132,11 @@ class EshopDetail extends React.Component {
     this.setState({ [name]: event.target.checked });
   };
 
+  handleRemove = () => {
+    Meteor.call('eshops.remove', this.state._id, this.state.eshop);
+    this.props.history.push('/eshopy')
+  }
+
   render() {
     const { classes } = this.props
     const { value, updatting, updated, message } = this.state
@@ -153,30 +163,42 @@ class EshopDetail extends React.Component {
             </form>
           </CardContent>
           <CardActions className={classes.cardActions}>
-            <Button
-              onClick={this.handleSubmit}
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              <SaveIcon className={classes.leftIcon} />
-              Uložit
+            <div className={classes.leftButtons}>
+              <Button
+                onClick={this.handleSubmit}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+              >
+                <SaveIcon className={classes.leftIcon} />
+                Uložit
             </Button>
-            {this.state._id &&
-              <div className={classes.wrapper}>
-                <Button
-                  onClick={this.handleUpdate}
-                  color="primary"
-                  className={classes.button}
-                  disabled={updatting}
-                >
-                  {updated ? <CheckIcon className={classes.leftIcon} /> : <CachedIcon className={classes.leftIcon} />}
-                  {updated ? message : 'Aktualizovat ceny'}
-                </Button>
-                {updatting && <CircularProgress size={24} className={classes.buttonProgress} />}
-
-              </div>
-            }
+              {this.state._id &&
+                <div className={classes.wrapper}>
+                  <Button
+                    onClick={this.handleUpdate}
+                    color="primary"
+                    className={classes.button}
+                    disabled={updatting}
+                  >
+                    {updated ? <CheckIcon className={classes.leftIcon} /> : <CachedIcon className={classes.leftIcon} />}
+                    {updated ? message : 'Aktualizovat ceny'}
+                  </Button>
+                  {updatting && <CircularProgress size={24} className={classes.buttonProgress} />}
+                </div>
+              }
+            </div>
+            <div>
+              <Button
+                onClick={this.handleRemove}
+                variant="contained"
+                color="secondary"
+                className={classes.button}
+              >
+                <SaveIcon className={classes.leftIcon} />
+                Smazat
+            </Button>
+            </div>
           </CardActions>
         </Card>
       </Paper >

@@ -82,6 +82,12 @@ class ProjectDetail extends React.Component {
     this.setState({ items: this.state.items.concat(item) })
   }
 
+  removeItem = index => {
+    const items = Object.assign([], this.state.items)
+    items.splice(index, 1);
+    this.setState({ items })
+  }
+
   render() {
     const { classes } = this.props
     const { tab, name, items } = this.state
@@ -112,7 +118,11 @@ class ProjectDetail extends React.Component {
               </div>
               <div style={{ display: tab === 1 ? 'block' : 'none' }}>
                 <div className={classes.container}>
-                  <ProjectItems items={items} addItem={this.addItem} />
+                  <ProjectItems
+                    items={items}
+                    addItem={this.addItem}
+                    removeItem={this.removeItem}
+                  />
                 </div>
               </div>
             </form>

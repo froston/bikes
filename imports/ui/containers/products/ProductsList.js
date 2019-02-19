@@ -5,8 +5,6 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
-import Button from '@material-ui/core/Button';
-import EditIcon from '@material-ui/icons/Create';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Products } from '../../../api/products';

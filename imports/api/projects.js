@@ -20,6 +20,7 @@ Meteor.methods({
       check(project._id, String);
       Projects.update(project._id, {
         name: project.name,
+        items: project.items,
         lastUpdate: new Date(),
       });
     } else {

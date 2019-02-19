@@ -13,16 +13,7 @@ class EshopsList extends React.Component {
     { id: 'name', label: 'Název eshopu' },
     { id: 'date', label: 'Datum vytvoření', render: date => moment(date).format("DD.MM.YYYY") },
     { id: 'lastUpdate', label: 'Posledni aktualizace', render: date => moment(date).format("DD.MM.YYYY H:mm") },
-    { id: 'autoUpdate', label: 'Aktualizovat automaticky', render: (text) => text ? <UpdateIcon /> : null },
-    {
-      id: 'actions', label: '', render: (text, rec) => {
-        return (
-          <IconButton onClick={e => this.handleRemove(e, rec._id)}>
-            <DeleteIcon />
-          </IconButton>
-        )
-      }
-    }
+    { id: 'autoUpdate', label: 'Aktualizovat automaticky', render: (text) => text ? <UpdateIcon /> : null }
   ];
 
   handleCreate = () => {

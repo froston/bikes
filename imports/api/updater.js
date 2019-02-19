@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { parseString } from 'xml2js'
 import xpath from 'xml2js-xpath'
 import request from 'request'
-import utf8 from 'utf8'
+import iconv from 'iconv-lite';
 import { Eshops } from './eshops'
 import { Products } from './products'
 
@@ -37,7 +37,7 @@ const saveItem = (eshop, item, attrs) => {
       }
     }
     const itemToInsert = {
-      name: utf8.encode(getTagValue(item, attrs.name)),
+      name: getTagValue(item, attrs.name),
       ean: getTagValue(item, attrs.ean),
       code: getTagValue(item, attrs.id),
       producer: getTagValue(item, attrs.producer),
@@ -70,12 +70,14 @@ const updateEshop = (eshop) => {
     let updated = 0
     if (eshop && eshop.url && eshop.autoUpdate) {
       const attrs = eshop.attributes
-      //eshop.url = 'http://localhost:5000'
+      eshop.url = 'http://localhost:5000/maxibike.xml'
       const options = {
-        url: eshop.url
+        url: eshop.url,
+        encoding: 'binary'
       }
       request(options, Meteor.bindEnvironment((err, data, body) => {
         if (err) reject(err)
+        body = iconv.decode(body, 'utf8')
         parseString(body, opt, (err, json) => {
           if (err) reject(err)
           const items = xpath.find(json, `//${attrs.item}`);

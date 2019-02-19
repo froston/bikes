@@ -3,6 +3,7 @@ import { WebApp } from 'meteor/webapp';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { autoUpdate, updateEshop } from './updater'
+import { Products } from './products'
 
 export const Eshops = new Mongo.Collection('eshops');
 
@@ -80,7 +81,8 @@ Meteor.methods({
       });
     }
   },
-  'eshops.remove'(id) {
+  'eshops.remove'(id, eshop) {
     Eshops.remove(id);
+    Products.remove({ eshop: eshop })
   }
 })
