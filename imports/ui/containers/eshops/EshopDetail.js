@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button';
 import CachedIcon from '@material-ui/icons/Cached';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
+import ClearIcon from '@material-ui/icons/Clear';
 import { Eshops } from '../../../api/eshops';
 import Info from './Info'
 import XmlAtr from './XmlAtr'
@@ -20,21 +21,6 @@ import XmlAtr from './XmlAtr'
 const styles = theme => ({
   wrapper: {
     position: 'relative'
-  },
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 500,
-  },
-  dense: {
-    marginTop: 19,
-  },
-  menu: {
-    width: 200,
   },
   button: {
     margin: theme.spacing.unit,
@@ -46,17 +32,15 @@ const styles = theme => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  buttonLast: {
+    marginLeft: 'auto'
+  },
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
   cardActions: {
-    background: '#f5f5f5',
     display: 'flex',
-    justifyContent: 'space-between'
-  },
-  leftButtons: {
-    display: 'flex',
-    justifyContent: 'left',
+    background: '#f5f5f5'
   }
 })
 
@@ -124,6 +108,12 @@ class EshopDetail extends React.Component {
     });
   };
 
+  handleDeleteProducts = () => {
+    Meteor.call('products.removeByEshop', this.state.eshop, (err, res) => {
+      this.props.history.push('/eshopy')
+    })
+  }
+
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
   };
@@ -131,11 +121,6 @@ class EshopDetail extends React.Component {
   handleCheck = name => event => {
     this.setState({ [name]: event.target.checked });
   };
-
-  handleRemove = () => {
-    Meteor.call('eshops.remove', this.state._id, this.state.eshop);
-    this.props.history.push('/eshopy')
-  }
 
   render() {
     const { classes } = this.props
@@ -162,43 +147,40 @@ class EshopDetail extends React.Component {
               </div>
             </form>
           </CardContent>
-          <CardActions className={classes.cardActions}>
-            <div className={classes.leftButtons}>
-              <Button
-                onClick={this.handleSubmit}
-                variant="contained"
-                color="primary"
-                className={classes.button}
-              >
-                <SaveIcon className={classes.leftIcon} />
-                Uložit
+          <CardActions className={classes.cardActions} disableActionSpacing>
+            <Button
+              onClick={this.handleSubmit}
+              variant="contained"
+              color="primary"
+              className={classes.button}
+            >
+              <SaveIcon className={classes.leftIcon} />
+              Uložit
             </Button>
-              {this.state._id &&
-                <div className={classes.wrapper}>
-                  <Button
-                    onClick={this.handleUpdate}
-                    color="primary"
-                    className={classes.button}
-                    disabled={updatting}
-                  >
-                    {updated ? <CheckIcon className={classes.leftIcon} /> : <CachedIcon className={classes.leftIcon} />}
-                    {updated ? message : 'Aktualizovat ceny'}
-                  </Button>
-                  {updatting && <CircularProgress size={24} className={classes.buttonProgress} />}
-                </div>
-              }
-            </div>
-            <div>
+            {this.state._id &&
+              <div className={classes.wrapper}>
+                <Button
+                  onClick={this.handleUpdate}
+                  color="primary"
+                  className={classes.button}
+                  disabled={updatting}
+                >
+                  {updated ? <CheckIcon className={classes.leftIcon} /> : <CachedIcon className={classes.leftIcon} />}
+                  {updated ? message : 'Aktualizovat produkty'}
+                </Button>
+                {updatting && <CircularProgress size={24} className={classes.buttonProgress} />}
+              </div>
+            }
+            {this.state._id &&
               <Button
-                onClick={this.handleRemove}
-                variant="contained"
+                onClick={this.handleDeleteProducts}
                 color="secondary"
-                className={classes.button}
+                className={[classes.button, classes.buttonLast]}
               >
-                <SaveIcon className={classes.leftIcon} />
-                Smazat
-            </Button>
-            </div>
+                <ClearIcon className={classes.leftIcon} />
+                Smazat produkty
+              </Button>
+            }
           </CardActions>
         </Card>
       </Paper >

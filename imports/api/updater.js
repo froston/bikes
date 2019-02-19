@@ -58,7 +58,9 @@ const autoUpdate = () => {
   return new Promise((resolve, reject) => {
     const eshops = Eshops.find({}).fetch();
     eshops.forEach(eshop => {
-      updateEshop(eshop)
+      if (eshop.autoUpdate) {
+        updateEshop(eshop)
+      }
     })
     resolve("DONE")
   })
@@ -68,9 +70,9 @@ const updateEshop = (eshop) => {
   return new Promise((resolve, reject) => {
     let inserted = 0
     let updated = 0
-    if (eshop && eshop.url && eshop.autoUpdate) {
+    if (eshop && eshop.url) {
       const attrs = eshop.attributes
-      eshop.url = 'http://localhost:5000/maxibike.xml'
+      //eshop.url = 'http://localhost:5000/maxibike.xml'
       const options = {
         url: eshop.url,
         encoding: 'binary'

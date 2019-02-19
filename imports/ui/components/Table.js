@@ -111,7 +111,7 @@ class EnhancedTable extends React.Component {
 
 EnhancedTable.propTypes = {
   classes: PropTypes.object.isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   rows: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
   ready: PropTypes.bool,
@@ -121,7 +121,6 @@ EnhancedTable.propTypes = {
   rowsPerPage: PropTypes.number,
   handleClick: PropTypes.func,
   handleCreate: PropTypes.func,
-  handleFilter: PropTypes.func,
   handleSort: PropTypes.func,
   handleSearch: PropTypes.func,
   handlePage: PropTypes.func,

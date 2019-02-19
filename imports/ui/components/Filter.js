@@ -10,18 +10,26 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
     padding: 20,
-    width: 300
+    width: 400
   },
   typography: {
     margin: theme.spacing.unit * 2,
   },
   button: {
+    margin: theme.spacing.unit,
+  },
+  navButton: {
+    marginTop: 20
+  },
+  title: {
     margin: theme.spacing.unit,
   },
   formControl: {
@@ -30,13 +38,16 @@ const styles = theme => ({
   },
 });
 
+
 class Filter extends React.Component {
   state = {
     anchorEl: null,
-    catMain: '',
-    catSecond: '',
+    catMain: [],
+    catSecond: [],
+    catThird: [],
     mainCats: [],
     secCats: [],
+    thirdCats: []
   }
 
   componentDidMount() {
@@ -51,6 +62,12 @@ class Filter extends React.Component {
     })
   }
 
+  loadThirdCats = secCat => {
+    Meteor.call('products.getThirdCat', secCat, (err, thirdCats) => {
+      this.setState({ thirdCats })
+    })
+  }
+
   handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
   }
@@ -59,24 +76,41 @@ class Filter extends React.Component {
     this.setState({ anchorEl: null });
   }
 
+  handleReset = () => {
+    this.setState({
+      anchorEl: null,
+      catMain: [],
+      catSecond: [],
+      catThird: [],
+      secCats: [],
+      thirdCats: []
+    }, this.handleFilter);
+  }
+
   handleMainChange = event => {
     const catMain = event.target.value
     this.loadSecCats(catMain)
-    this.setState({ catMain, catSecond: '' }, this.handleFilter);
+    this.setState({ catMain, catSecond: [] }, this.handleFilter);
   };
 
   handleSecChange = event => {
-    this.setState({ catSecond: event.target.value }, this.handleFilter);
+    const catSecond = event.target.value
+    this.loadThirdCats(catSecond)
+    this.setState({ catSecond, catThird: [] }, this.handleFilter);
+  };
+
+  handleThirdChange = event => {
+    this.setState({ catThird: event.target.value }, this.handleFilter);
   };
 
   handleFilter = () => {
-    const { catMain, catSecond } = this.state
-    this.props.handleFilter({ catMain, catSecond })
+    const { catMain, catSecond, catThird } = this.state
+    this.props.handleFilter({ catMain, catSecond, catThird })
   }
 
   render() {
     const { classes } = this.props;
-    const { anchorEl, mainCats, catMain, secCats, catSecond } = this.state;
+    const { anchorEl, mainCats, catMain, secCats, catSecond, thirdCats, catThird } = this.state;
     const open = Boolean(anchorEl);
     return (
       <div>
@@ -95,11 +129,15 @@ class Filter extends React.Component {
           onClose={this.handleClose}
         >
           <form className={classes.root} autoComplete="off">
+            <Typography variant="h6" gutterBottom>
+              Nastavit filtry
+            </Typography>
             <Grid container spacing={24}>
               <Grid item xs={12}>
                 <FormControl className={classes.formControl}>
                   <InputLabel shrink htmlFor="cat-label-placeholder">Hlavní Kategorie</InputLabel>
                   <Select
+                    multiple
                     value={catMain}
                     onChange={this.handleMainChange}
                     input={<Input name="category" id="cat-label-placeholder" />}
@@ -114,8 +152,9 @@ class Filter extends React.Component {
               </Grid>
               <Grid item xs={12}>
                 <FormControl className={classes.formControl}>
-                  <InputLabel shrink htmlFor="cat-label-placeholder">Vedlejší Kategorie</InputLabel>
+                  <InputLabel shrink htmlFor="cat-label-placeholder">Podkategorie Kategorie</InputLabel>
                   <Select
+                    multiple
                     value={catSecond}
                     onChange={this.handleSecChange}
                     input={<Input name="category" id="cat-label-placeholder" />}
@@ -128,6 +167,32 @@ class Filter extends React.Component {
                     })}
                   </Select>
                 </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl className={classes.formControl}>
+                  <InputLabel shrink htmlFor="cat-label-placeholder">Vedlejší Kategorie</InputLabel>
+                  <Select
+                    multiple
+                    value={catThird}
+                    onChange={this.handleThirdChange}
+                    input={<Input name="category" id="cat-label-placeholder" />}
+                    displayEmpty
+                    name="category"
+                    disabled={thirdCats.length === 0}
+                  >
+                    {thirdCats.map(cat => {
+                      return <MenuItem key={cat} value={cat}>{cat.trim()}</MenuItem>
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justify="flex-end">
+              <Grid item>
+                <Button color="secondary" className={classes.navButton} onClick={this.handleReset}>Obnovit</Button>
+              </Grid>
+              <Grid item>
+                <Button color="primary" className={classes.navButton} onClick={this.handleClose}>OK</Button>
               </Grid>
             </Grid>
           </form>

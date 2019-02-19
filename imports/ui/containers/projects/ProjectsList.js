@@ -9,7 +9,7 @@ import { Table } from '../../components'
 class ProjectsList extends React.Component {
   rows = [
     { id: 'name', label: 'Název' },
-    { id: 'desc', label: 'Popis' },
+    { id: 'description', label: 'Popis' },
     { id: 'totalPrice', label: 'Celková cena' },
     { id: 'status', label: 'Status objednávky' },
     { id: 'date', label: 'Datum vytvoření', render: date => moment(date).format("DD.MM.YYYY") },

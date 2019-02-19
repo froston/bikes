@@ -104,7 +104,7 @@ class ProductDetail extends React.Component {
       <Paper square>
         <Card>
           <CardContent>
-            <Typography variant="h4" color="inherit" noWrap>
+            <Typography variant="h5" color="inherit" noWrap>
               {eshop} - {name}
             </Typography>
             <div className={classes.categories}>
@@ -168,7 +168,7 @@ class ProductDetail extends React.Component {
               </Grid >
             </ div>
           </CardContent>
-          <CardActions className={classes.cardActions}>
+          <CardActions className={classes.cardActions} disableActionSpacing>
             <Button
               onClick={this.handleSubmit}
               variant="contained"
