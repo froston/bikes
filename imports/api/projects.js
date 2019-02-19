@@ -20,11 +20,13 @@ Meteor.methods({
       check(project._id, String);
       Projects.update(project._id, {
         name: project.name,
+        description: project.description,
         lastUpdate: new Date(),
       });
     } else {
       Projects.insert({
         name: project.name,
+        description: project.description,
         items: [],
         createdAt: new Date(),
         lastUpdate: new Date(),

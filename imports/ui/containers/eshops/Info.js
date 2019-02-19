@@ -36,6 +36,7 @@ class Info extends React.Component {
             value={values.eshop}
             onChange={handleChange('eshop')}
             margin="normal"
+            disabled={values._id}
           />
         </div>
         <div className={classes.container}>

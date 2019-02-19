@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button';
 import CachedIcon from '@material-ui/icons/Cached';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
+import ClearIcon from '@material-ui/icons/Clear';
 import { Eshops } from '../../../api/eshops';
 import Info from './Info'
 import XmlAtr from './XmlAtr'
@@ -21,21 +22,6 @@ const styles = theme => ({
   wrapper: {
     margin: theme.spacing.unit,
     position: 'relative',
-  },
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 500,
-  },
-  dense: {
-    marginTop: 19,
-  },
-  menu: {
-    width: 200,
   },
   button: {
     margin: theme.spacing.unit,
@@ -47,10 +33,14 @@ const styles = theme => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  buttonLast: {
+    marginLeft: 'auto'
+  },
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
   cardActions: {
+    display: 'flex',
     background: '#f5f5f5'
   }
 })
@@ -119,6 +109,12 @@ class EshopDetail extends React.Component {
     });
   };
 
+  handleDeleteProducts = () => {
+    Meteor.call('products.removeByEshop', this.state.eshop, (err, res) => {
+      this.props.history.push('/eshopy')
+    })
+  }
+
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
   };
@@ -152,7 +148,7 @@ class EshopDetail extends React.Component {
               </div>
             </form>
           </CardContent>
-          <CardActions className={classes.cardActions}>
+          <CardActions className={classes.cardActions} disableActionSpacing>
             <Button
               onClick={this.handleSubmit}
               variant="contained"
@@ -171,11 +167,20 @@ class EshopDetail extends React.Component {
                   disabled={updatting}
                 >
                   {updated ? <CheckIcon className={classes.leftIcon} /> : <CachedIcon className={classes.leftIcon} />}
-                  {updated ? message : 'Aktualizovat ceny'}
+                  {updated ? message : 'Aktualizovat produkty'}
                 </Button>
                 {updatting && <CircularProgress size={24} className={classes.buttonProgress} />}
-
               </div>
+            }
+            {this.state._id &&
+              <Button
+                onClick={this.handleDeleteProducts}
+                color="secondary"
+                className={[classes.button, classes.buttonLast]}
+              >
+                <ClearIcon className={classes.leftIcon} />
+                Smazat produkty
+              </Button>
             }
           </CardActions>
         </Card>

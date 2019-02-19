@@ -121,7 +121,6 @@ EnhancedTable.propTypes = {
   rowsPerPage: PropTypes.number,
   handleClick: PropTypes.func,
   handleCreate: PropTypes.func,
-  handleFilter: PropTypes.func,
   handleSort: PropTypes.func,
   handleSearch: PropTypes.func,
   handlePage: PropTypes.func,
