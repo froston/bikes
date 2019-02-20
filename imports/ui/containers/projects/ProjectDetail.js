@@ -10,6 +10,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
+import ClearIcon from '@material-ui/icons/Close'
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -30,8 +31,7 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
+    fontSize: 25
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -176,7 +176,8 @@ class ProjectDetail extends React.Component {
                 <TextField
                   label="Přidat sekci"
                   variant="outlined"
-                  className={[classes.textField, classes.addInput]}
+                  className={classes.textField}
+                  style={{margin: '20px 0'}}
                   value={this.state.secName}
                   onKeyPress={(ev) => {
                     if (ev.key === 'Enter') {
@@ -200,7 +201,7 @@ class ProjectDetail extends React.Component {
                 />
                 {sections.map(sec => {
                   return (
-                    <ExpansionPanel square>
+                    <ExpansionPanel key="sec" square>
                       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography className={classes.heading}>{sec}</Typography>
                       </ExpansionPanelSummary>
@@ -233,10 +234,10 @@ class ProjectDetail extends React.Component {
             </Button>
             <Button
               onClick={this.handleDelete}
-              color="secondary"
               className={classes.button}
+              color="secondary"
             >
-              <SaveIcon className={classes.leftIcon} />
+              <ClearIcon className={classes.leftIcon} />
               Smazat
             </Button>
           </CardActions>
