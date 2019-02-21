@@ -51,6 +51,7 @@ Meteor.methods({
           category: eshop.category,
           delimiter: eshop.delimiter,
           unit: eshop.unit,
+          prodUrl: eshop.prodUrl,
           ignoreFirst: eshop.ignoreFirst
         },
         lastUpdate: new Date(),
@@ -73,6 +74,7 @@ Meteor.methods({
           category: eshop.category,
           delimiter: eshop.delimiter,
           unit: eshop.unit,
+          prodUrl: eshop.prodUrl,
           ignoreFirst: eshop.ignoreFirst
         },
         createdAt: new Date(),

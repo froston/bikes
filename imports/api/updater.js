@@ -47,7 +47,8 @@ const saveItem = (eshop, item, attrs) => {
       amount: amount,
       unit: getTagValue(item, attrs.unit),
       photo: getTagValue(item, attrs.photo),
-      eshop
+      eshop,
+      url: getTagValue(item, attrs.prodUrl),
     }
     Products.insert(itemToInsert)
     return "inserted"

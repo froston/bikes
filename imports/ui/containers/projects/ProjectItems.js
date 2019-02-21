@@ -5,17 +5,14 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import AddIcon from '@material-ui/icons/Add';
 import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Avatar from '@material-ui/core/Avatar';
 import { Parts } from '../../../api/parts';
-import { Table, ProductsModal } from '../../components'
+import { Table, ProductsModal, ItemTypes } from '../../components'
 
 const styles = theme => ({
   root: {
@@ -73,6 +70,12 @@ class ProjectItems extends React.Component {
     item.amount = this.state.amount
     this.props.addItem(item)
     this.toggleModal()
+    // set new item type
+    let items = JSON.parse(localStorage.getItem('itemTypes')) || []
+    if (!items.find(i => i == this.state.item)) {
+      items.push(this.state.item)
+      localStorage.setItem('itemTypes', JSON.stringify(items))
+    }
   }
 
   removeItem = (e, id) => {
@@ -83,7 +86,7 @@ class ProjectItems extends React.Component {
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
-  };
+  }
 
   render() {
     const { items, classes } = this.props;
@@ -94,15 +97,10 @@ class ProjectItems extends React.Component {
           <Grid container alignItems="center" spacing={24}>
             <Grid item xs={3}>
               <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="item">Druh dílu</InputLabel>
-                <Select
+                <ItemTypes
                   value={this.state.item}
-                  onChange={this.handleChange('item')}
-                  inputProps={{ name: 'item', id: 'item', }}
-                >
-                  <MenuItem value='dil1'>Díl 1</MenuItem>
-                  <MenuItem value='dil2'>Díl 2</MenuItem>
-                </Select>
+                  handleChange={item => this.setState({ item })}
+                />
               </FormControl>
             </Grid>
             <Grid item xs={3}>

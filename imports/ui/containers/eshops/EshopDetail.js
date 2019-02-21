@@ -66,6 +66,7 @@ class EshopDetail extends React.Component {
     amount: '',
     unit: '',
     photo: '',
+    prodUrl: '',
     autoUpdate: false
   }
 

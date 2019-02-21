@@ -71,7 +71,7 @@ class ProductList extends React.Component {
       { id: 'category', label: 'Kategorie', visible: columns['Kategorie'], render: c => c && c.map(cat => <Chip key={cat} label={cat} className={this.props.classes.chip} />) },
       { id: 'price_mo', label: 'MO Cena', visible: columns['MO Cena'] },
       { id: 'price_vo', label: 'VO Cena', visible: columns['VO Cena'] },
-      { id: 'amount', label: 'Skladem', visible: columns['Skladem'], render: (text, rec) => `${rec.amount} ${rec.unit}` },
+      { id: 'amount', label: 'Skladem', visible: columns['Skladem'], render: (text, rec) => rec.amount && rec.unit && `${rec.amount} ${rec.unit}` },
       {
         id: 'actions', label: '', render: (text, rec) => {
           return (

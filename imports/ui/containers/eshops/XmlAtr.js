@@ -13,6 +13,7 @@ const styles = theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
+    padding: 40
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -29,7 +30,7 @@ class XmlAtr extends React.Component {
     const { classes, handleChange, handleCheck, values } = this.props;
     return (
       <div className={classes.root}>
-        <Grid container spacing={40}>
+        <Grid container spacing={40} className={classes.container}>
           <Grid item sm={6} md={4}>
             <TextField
               label="Položka"
@@ -162,6 +163,16 @@ class XmlAtr extends React.Component {
               className={classes.textField}
               value={values.photo}
               onChange={handleChange('photo')}
+              margin="normal"
+            />
+          </Grid>
+
+          <Grid item sm={6} md={4}>
+            <TextField
+              label="Odkaz na produkt"
+              className={classes.textField}
+              value={values.prodUrl}
+              onChange={handleChange('prodUrl')}
               margin="normal"
             />
           </Grid>

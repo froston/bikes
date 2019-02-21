@@ -1,4 +1,5 @@
 import { Mongo } from 'meteor/mongo';
+import { check } from 'meteor/check';
 
 export const Products = new Mongo.Collection('products');
 
@@ -35,6 +36,24 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
+  'products.save'(product) {
+    check(product._id, String);
+    Products.update(product._id, {
+      code: product.code,
+      name: product.name,
+      ean: product.ean,
+      category: product.category,
+      photo: product.photo,
+      producer: product.producer,
+      price_vo: product.price_vo,
+      price_mo: product.price_mo,
+      amount: product.amount,
+      unit: product.unit,
+      eshop: product.eshop,
+      weight: product.weight,
+      url: product.url
+    });
+  },
   'products.remove'(id) {
     Products.remove(id);
   },

@@ -22,7 +22,11 @@ const styles = theme => ({
   },
   container: {
     display: 'flex',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
+    padding: 40
+  },
+  url: {
+    color: 'black'
   },
   categories: {
     margin: '10px 0 30px'
@@ -65,7 +69,9 @@ class ProductDetail extends React.Component {
     price_vo: '',
     producer: '',
     unit: '',
-    eshop: ''
+    eshop: '',
+    weight: '',
+    url: ''
   }
 
   componentDidMount() {
@@ -85,6 +91,10 @@ class ProductDetail extends React.Component {
     });
   }
 
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.value });
+  }
+
   handleSubmit = e => {
     e.preventDefault()
     Meteor.call('products.save', this.state);
@@ -99,13 +109,13 @@ class ProductDetail extends React.Component {
 
   render() {
     const { classes } = this.props
-    const { code, ean, name, category, photo, price_mo, price_vo, producer, amount, unit, eshop } = this.state
+    const { code, url, ean, name, category, photo, price_mo, price_vo, producer, amount, unit, eshop, weight } = this.state
     return (
       <Paper square>
         <Card>
           <CardContent>
             <Typography variant="h5" color="inherit" noWrap>
-              {eshop} - {name}
+              <a href={url} target="_blank" className={classes.url}>{eshop} - {name}</a>
             </Typography>
             <div className={classes.categories}>
               {category && category.map((cat, index) => (
@@ -117,11 +127,13 @@ class ProductDetail extends React.Component {
               ))}
             </div>
             <div className={classes.root}>
-              <Grid container spacing={40}>
+              <Grid container spacing={40} className={classes.container}>
                 <Grid item sm={3}>
-                  <img src={photo} alt="Náhled produktu" className={classes.img} />
+                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <img src={photo} alt="Náhled produktu" className={classes.img} />
+                  </div>
                 </Grid >
-                <Grid item sm={4}>
+                <Grid item xs={12} sm={3}>
                   <TextField
                     label="Kod"
                     className={classes.textField}
@@ -132,20 +144,23 @@ class ProductDetail extends React.Component {
                   <TextField
                     label="Ean"
                     className={classes.textField}
+                    onChange={this.handleChange('ean')}
                     value={ean}
                     margin="normal"
                   />
                   <TextField
                     label="Vyrobce"
                     className={classes.textField}
+                    onChange={this.handleChange('producer')}
                     value={producer}
                     margin="normal"
                   />
                 </Grid>
-                <Grid item sm={4}>
+                <Grid item xs={12} sm={3}>
                   <TextField
                     label="Skladem"
                     className={classes.textField}
+                    onChange={this.handleChange('amount')}
                     value={String(amount)}
                     margin="normal"
                     InputProps={{
@@ -155,18 +170,29 @@ class ProductDetail extends React.Component {
                   <TextField
                     label="Cena MO"
                     className={classes.textField}
+                    onChange={this.handleChange('price_mo')}
                     value={price_mo}
                     margin="normal"
                   />
                   <TextField
                     label="Cena VO"
                     className={classes.textField}
+                    onChange={this.handleChange('price_vo')}
                     value={price_vo}
                     margin="normal"
                   />
-                </Grid >
-              </Grid >
-            </ div>
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    label="Hmotnost"
+                    className={classes.textField}
+                    onChange={this.handleChange('weight')}
+                    value={weight}
+                    margin="normal"
+                  />
+                </Grid>
+              </Grid>
+            </div>
           </CardContent>
           <CardActions className={classes.cardActions} disableActionSpacing>
             <Button
