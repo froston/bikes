@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withTracker } from 'meteor/react-meteor-data';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -11,8 +10,8 @@ import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Avatar from '@material-ui/core/Avatar';
-import { Parts } from '../../../api/parts';
 import { Table, ProductsModal, ItemTypes } from '../../components'
+import { addItemType } from '../../utils/storage'
 
 const styles = theme => ({
   root: {
@@ -69,13 +68,10 @@ class ProjectItems extends React.Component {
     item.item = this.state.item
     item.amount = this.state.amount
     this.props.addItem(item)
+    this.setState({ item: '', amount: 1 })
     this.toggleModal()
-    // set new item type
-    let items = JSON.parse(localStorage.getItem('itemTypes')) || []
-    if (!items.find(i => i == this.state.item)) {
-      items.push(this.state.item)
-      localStorage.setItem('itemTypes', JSON.stringify(items))
-    }
+    // add new item type in storage
+    addItemType(this.state.item)
   }
 
   removeItem = (e, id) => {
@@ -108,7 +104,6 @@ class ProjectItems extends React.Component {
                 <TextField
                   label="Mnozstvi"
                   type="number"
-                  //className={classes.textField}
                   value={this.state.amount}
                   onChange={this.handleChange('amount')}
                 />
@@ -150,9 +145,4 @@ ProjectItems.propTypes = {
   removeItem: PropTypes.func,
 };
 
-export default withTracker(() => {
-  Meteor.subscribe('parts')
-  return {
-    parts: Parts.find({}).fetch(),
-  };
-})(withStyles(styles)(ProjectItems))
+export default withStyles(styles)(ProjectItems)

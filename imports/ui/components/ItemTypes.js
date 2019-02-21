@@ -4,7 +4,12 @@ import Autosuggest from 'react-autosuggest';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
+import ClearIcon from '@material-ui/icons/Clear';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
+import { getItemTypes, removeItemType } from '../utils/storage'
 
 const styles = theme => ({
   container: {
@@ -26,10 +31,6 @@ const styles = theme => ({
     listStyleType: 'none',
   }
 });
-
-function getItemTypes() {
-  return JSON.parse(localStorage.getItem('itemTypes')) || []
-}
 
 function renderInputComponent(inputProps) {
   const { classes, inputRef = () => { }, ref, ...other } = inputProps;
@@ -66,22 +67,42 @@ class ItemTypes extends React.Component {
     this.setState({
       suggestions: [],
     });
-  };
+  }
+
+  handleRemoveItem = (e, s) => {
+    e.preventDefault()
+    e.stopPropagation()
+    removeItemType(s)
+    this.setState({ suggestions: getItemTypes() })
+  }
 
   handleChange = name => (event, { newValue }) => {
     this.setState({ [name]: newValue });
     this.props.handleChange(newValue)
   };
 
+  renderSuggestion = (s, { isHighlighted }) => (
+    <MenuItem component="div">
+      <ListItemText primary={s} />
+      {isHighlighted &&
+        <ListItemIcon style={{ marginRight: 0 }}>
+          <IconButton onClick={e => this.handleRemoveItem(e, s)} >
+            <ClearIcon />
+          </IconButton >
+        </ListItemIcon>
+      }
+    </MenuItem>
+  )
+
   render() {
     const { classes } = this.props;
     const autosuggestProps = {
       renderInputComponent,
+      renderSuggestion: this.renderSuggestion,
       suggestions: this.state.suggestions,
       onSuggestionsFetchRequested: this.handleSuggestionsFetchRequested,
       onSuggestionsClearRequested: this.handleSuggestionsClearRequested,
       getSuggestionValue: v => v,
-      renderSuggestion: s => <MenuItem component="div">{s}</MenuItem>,
       shouldRenderSuggestions: () => true
     };
 
@@ -92,7 +113,7 @@ class ItemTypes extends React.Component {
           classes,
           label: 'Druh dílu',
           placeholder: 'Druh dílu',
-          value: this.state.item,
+          value: this.props.value,
           onChange: this.handleChange('item'),
         }}
         theme={{

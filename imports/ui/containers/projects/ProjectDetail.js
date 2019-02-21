@@ -31,7 +31,7 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   heading: {
-    fontSize: 25
+    fontSize: 20
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -177,7 +177,7 @@ class ProjectDetail extends React.Component {
                   label="Přidat sekci"
                   variant="outlined"
                   className={classes.textField}
-                  style={{margin: '20px 0'}}
+                  style={{ margin: '20px 0' }}
                   value={this.state.secName}
                   onKeyPress={(ev) => {
                     if (ev.key === 'Enter') {

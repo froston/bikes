@@ -48,6 +48,7 @@ class ProductList extends React.Component {
       return obj
     }, {})
     this.setState({ columns })
+    this.resetConfig()
   }
 
   getRows = () => {
@@ -134,6 +135,16 @@ class ProductList extends React.Component {
     const config = this.props.tableConfig.get();
     config[name] = value;
     this.props.tableConfig.set(config);
+  }
+
+  resetConfig = () => {
+    // todo find a way how to set all config as object
+    this.setConfig('setConfig', null)
+    this.setConfig('filters', null)
+    this.setConfig('page', 0)
+    this.setConfig('rowsPerPage', 10)
+    this.setConfig('order', 'asc')
+    this.setConfig('orderBy', '_id')
   }
 
   render() {
