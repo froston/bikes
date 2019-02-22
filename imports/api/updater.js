@@ -23,7 +23,7 @@ const saveItem = (eshop, item, attrs) => {
   const product = Products.findOne({ code: code })
   if (product) {
     // update only if changed
-    if (price_vo !== product.price_vo || price_mo !== product.price_mo || amount !== product.amount) {
+    if (price_vo != product.price_vo || price_mo != product.price_mo || amount != product.amount) {
       Products.update({ code }, { $set: { price_vo, price_mo, amount } })
       return "updated"
     }
@@ -46,8 +46,10 @@ const saveItem = (eshop, item, attrs) => {
       code: getTagValue(item, attrs.id),
       producer: getTagValue(item, attrs.producer),
       category: category,
-      price_vo: price_vo,
-      price_mo: price_mo,
+      price_vo: parseFloat(price_vo),
+      price_mo: parseFloat(price_mo),
+      //price_vo_display: Math.round(price_vo),
+      //price_mo_display: Math.round(price_mo),
       amount: amount,
       unit: getTagValue(item, attrs.unit),
       photo: getTagValue(item, attrs.photo),

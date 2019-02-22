@@ -48,7 +48,6 @@ class ProductList extends React.Component {
       return obj
     }, {})
     this.setState({ columns })
-    this.resetConfig()
   }
 
   getRows = () => {
@@ -70,8 +69,8 @@ class ProductList extends React.Component {
       { id: 'eshop', label: 'Eshop', visible: columns['Eshop'] },
       { id: 'name', label: 'Název', visible: columns['Název'] },
       { id: 'category', label: 'Kategorie', visible: columns['Kategorie'], render: c => c && c.map(cat => <Chip key={cat} label={cat} className={this.props.classes.chip} />) },
-      { id: 'price_mo', label: 'MO Cena', visible: columns['MO Cena'] },
-      { id: 'price_vo', label: 'VO Cena', visible: columns['VO Cena'] },
+      { id: 'price_mo', label: 'MO Cena', visible: columns['MO Cena'], render: c => Math.round(c) },
+      { id: 'price_vo', label: 'VO Cena', visible: columns['VO Cena'], render: c => Math.round(c) },
       { id: 'amount', label: 'Skladem', visible: columns['Skladem'], render: (text, rec) => rec.amount && rec.unit && `${rec.amount} ${rec.unit}` },
       {
         id: 'actions', label: '', render: (text, rec) => {
@@ -93,6 +92,7 @@ class ProductList extends React.Component {
 
   handleClick = (item) => {
     if (!!this.props.handleClick) {
+      this.resetConfig()
       this.props.handleClick(item)
     } else {
       const { match, history } = this.props
@@ -139,7 +139,6 @@ class ProductList extends React.Component {
 
   resetConfig = () => {
     // todo find a way how to set all config as object
-    this.setConfig('setConfig', null)
     this.setConfig('filters', null)
     this.setConfig('page', 0)
     this.setConfig('rowsPerPage', 10)
