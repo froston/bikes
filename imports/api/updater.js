@@ -29,11 +29,15 @@ const saveItem = (eshop, item, attrs) => {
     }
   } else {
     let category = getTagValue(item, attrs.category)
-    if (category && attrs.delimiter) {
-      category = category.split(attrs.delimiter)
-      if (attrs.ignoreFirst) {
-        category.shift()
-        category[0] = category[0] && `${category[0].trim()} `
+    if (category) {
+      if (attrs.delimiter) {
+        category = category.split(attrs.delimiter)
+        if (attrs.ignoreFirst) {
+          category.shift()
+          category[0] = category[0] && `${category[0].trim()} `
+        }
+      } else {
+        category = [category]
       }
     }
     const itemToInsert = {

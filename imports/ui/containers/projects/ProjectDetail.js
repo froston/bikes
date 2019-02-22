@@ -201,7 +201,7 @@ class ProjectDetail extends React.Component {
                 />
                 {sections.map(sec => {
                   return (
-                    <ExpansionPanel key="sec" square>
+                    <ExpansionPanel key={sec} square>
                       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography className={classes.heading}>{sec}</Typography>
                       </ExpansionPanelSummary>
