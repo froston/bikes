@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles';
-import { Tracker } from 'meteor/tracker'
+import { withTracker } from 'meteor/react-meteor-data';
 import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -74,21 +74,10 @@ class ProductDetail extends React.Component {
     url: ''
   }
 
-  componentDidMount() {
-    const { match } = this.props
-    if (match.params && match.params.id) {
-      this.loadData(match.params.id)
+  componentDidUpdate(prevProps) {
+    if (prevProps.product !== this.props.product) {
+      this.setState({ ...this.props.product[0] })
     }
-  }
-
-  loadData = _id => {
-    Tracker.autorun(() => {
-      Meteor.subscribe('product', _id);
-      let product = Products.findOne(_id);
-      if (product) {
-        this.setState({ ...product });
-      }
-    });
   }
 
   handleChange = name => event => {
@@ -219,5 +208,9 @@ class ProductDetail extends React.Component {
   }
 }
 
-
-export default withStyles(styles)(withRouter(ProductDetail));
+export default withTracker(props => {
+  Meteor.subscribe('product', props.match.params.id);
+  return {
+    product: Products.find({}).fetch(),
+  }
+})(withStyles(styles)(withRouter(ProductDetail)));
