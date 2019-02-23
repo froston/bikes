@@ -10,7 +10,7 @@ import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Avatar from '@material-ui/core/Avatar';
-import { Table, ProductsModal, ItemTypes } from '../../components'
+import { Table, ProductsModal, ProductModal, ItemTypes } from '../../components'
 import { addItemType } from '../../utils/storage'
 
 const styles = theme => ({
@@ -32,9 +32,11 @@ const styles = theme => ({
 
 class ProjectItems extends React.Component {
   state = {
-    modal: false,
+    modalProd: false,
+    modalList: false,
+    prodId: null,
     item: '',
-    amount: 1
+    quantity: 1
   }
 
   rows = [
@@ -48,7 +50,7 @@ class ProjectItems extends React.Component {
     { id: 'name', label: 'Název' },
     { id: 'price_mo', label: 'Cena MOC' },
     { id: 'price_vo', label: 'Cena VOC' },
-    { id: 'amount', label: 'Mnozstvi' },
+    { id: 'quantity', label: 'Mnozstvi' },
     {
       id: 'actions', label: '', render: (text, rec) => {
         return (
@@ -60,18 +62,32 @@ class ProjectItems extends React.Component {
     }
   ]
 
-  toggleModal = () => {
-    this.setState({ modal: !this.state.modal })
+  toggleModalProd = () => {
+    this.setState({ modalProd: !this.state.modalProd })
+  }
+
+  toggleModalList = () => {
+    this.setState({ modalList: !this.state.modalList })
+  }
+
+  openProduct = (v) => {
+    this.setState({ prodId: v._id })
+    this.toggleModalProd()
   }
 
   addItem = (item) => {
     item.item = this.state.item
-    item.amount = this.state.amount
+    item.quantity = this.state.quantity
     this.props.addItem(item)
-    this.setState({ item: '', amount: 1 })
-    this.toggleModal()
+    this.setState({ item: '', quantity: 1 })
+    this.toggleModalList()
     // add new item type in storage
     addItemType(this.state.item)
+  }
+
+  updateItem = item => {
+    this.props.updateItem(item)
+    this.toggleModalProd()
   }
 
   removeItem = (e, id) => {
@@ -86,7 +102,7 @@ class ProjectItems extends React.Component {
 
   render() {
     const { items, classes } = this.props;
-    const { modal } = this.state;
+    const { modalList, modalProd } = this.state;
     return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
@@ -104,15 +120,15 @@ class ProjectItems extends React.Component {
                 <TextField
                   label="Mnozstvi"
                   type="number"
-                  value={this.state.amount}
-                  onChange={this.handleChange('amount')}
+                  value={this.state.quantity}
+                  onChange={this.handleChange('quantity')}
                 />
               </FormControl>
             </Grid>
             <Grid item xs={3}>
               <Button
-                label="Přidat Item"
-                onClick={this.toggleModal}
+                label="Přidat dil"
+                onClick={this.toggleModalList}
                 variant="outlined"
                 color="primary"
               >
@@ -126,10 +142,17 @@ class ProjectItems extends React.Component {
           <Table
             rows={this.rows}
             data={items}
+            handleClick={this.openProduct}
+          />
+          <ProductModal
+            open={modalProd}
+            handleClick={this.updateItem}
+            handleClose={this.toggleModalProd}
+            id={this.state.prodId}
           />
           <ProductsModal
-            open={modal}
-            handleClose={this.toggleModal}
+            open={modalList}
+            handleClose={this.toggleModalList}
             handleClick={this.addItem}
           />
         </div>

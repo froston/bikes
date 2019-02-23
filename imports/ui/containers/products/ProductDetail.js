@@ -87,7 +87,11 @@ class ProductDetail extends React.Component {
   handleSubmit = e => {
     e.preventDefault()
     Meteor.call('products.save', this.state);
-    this.props.history.push('/produkty')
+    if (!!this.props.handleClick) {
+      this.props.handleClick(this.state)
+    } else {
+      this.props.history.push('/produkty')
+    }
   }
 
   handleDelete = e => {
@@ -193,14 +197,16 @@ class ProductDetail extends React.Component {
               <SaveIcon className={classes.leftIcon} />
               Uložit
             </Button>
-            <Button
-              onClick={this.handleDelete}
-              className={classes.button}
-              color="secondary"
-            >
-              <ClearIcon className={classes.leftIcon} />
-              Smazat
+            {!this.props.handleClick &&
+              <Button
+                onClick={this.handleDelete}
+                className={classes.button}
+                color="secondary"
+              >
+                <ClearIcon className={classes.leftIcon} />
+                Smazat
             </Button>
+            }
           </CardActions>
         </Card>
       </Paper >
@@ -209,7 +215,8 @@ class ProductDetail extends React.Component {
 }
 
 export default withTracker(props => {
-  Meteor.subscribe('product', props.match.params.id);
+  const id = props.match ? props.match.params.id : props.id
+  Meteor.subscribe('product', id);
   return {
     product: Products.find({}).fetch(),
   }

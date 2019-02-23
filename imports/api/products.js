@@ -3,7 +3,9 @@ import { check } from 'meteor/check';
 
 export const Products = new Mongo.Collection('products');
 
-const sortCb = (a, b) => {
+const sortCb = (first, second) => {
+  const a = first && first.toLowerCase()
+  const b = second && second.toLowerCase()
   if (a.trim() < b.trim()) { return -1; }
   if (a.trim() > b.trim()) { return 1; }
   return 0;

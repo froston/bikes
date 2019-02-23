@@ -8,7 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
-import { ProductsList } from '../containers';
+import { ProductDetail } from '../containers';
 
 const styles = {
   appBar: {
@@ -23,9 +23,9 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-class ProductsModal extends React.PureComponent {
+class ProductModal extends React.PureComponent {
   render() {
-    const { classes, open, handleClose, handleClick } = this.props;
+    const { id, classes, open, handleClick, handleClose } = this.props;
     return (
       <Dialog
         fullScreen
@@ -39,18 +39,21 @@ class ProductsModal extends React.PureComponent {
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.flex}>
-              Vybrat produkt
+              Náhled produktu
             </Typography>
           </Toolbar>
         </AppBar>
-        <ProductsList handleClick={handleClick} />
+        <ProductDetail id={id} handleClick={handleClick} handleClose={handleClose} />
       </Dialog>
     );
   }
 }
 
-ProductsModal.propTypes = {
+ProductModal.propTypes = {
   classes: PropTypes.object.isRequired,
-}
-
-export default withStyles(styles)(ProductsModal);
+  id: PropTypes.string,
+  open: PropTypes.bool,
+  handleClick: PropTypes.func,
+  handleClose: PropTypes.func,
+};
+export default withStyles(styles)(ProductModal);

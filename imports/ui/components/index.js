@@ -6,6 +6,7 @@ import TableHead from './TableHead'
 import Filter from './Filter'
 import SetColumns from './SetColumns'
 import ProductsModal from './ProductsModal'
+import ProductModal from './ProductModal'
 import ItemTypes from './ItemTypes'
 
 export {
@@ -17,5 +18,6 @@ export {
   Filter,
   SetColumns,
   ProductsModal,
+  ProductModal,
   ItemTypes
 }

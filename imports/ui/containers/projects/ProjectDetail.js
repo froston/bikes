@@ -62,7 +62,8 @@ class ProjectDetail extends React.Component {
     secName: '',
     sections: [],
     items: [],
-    modal: false
+    modal: false,
+    gross: 40
   }
 
   componentDidMount() {
@@ -100,6 +101,14 @@ class ProjectDetail extends React.Component {
     });
   }
 
+  calc = () => {
+    let totalPrice = 0
+    this.state.items.forEach(i => {
+      totalPrice += i.price_mo * i.quantity
+    })
+    return totalPrice / ((100 - this.state.gross) / 100)
+  }
+
   changeTab = (e, tab) => this.setState({ tab })
 
   handleChange = name => event => {
@@ -108,10 +117,12 @@ class ProjectDetail extends React.Component {
 
   addSection = () => {
     const { secName } = this.state
-    this.setState({
-      sections: [...this.state.sections, secName],
-      secName: ''
-    })
+    if (secName !== '') {
+      this.setState({
+        sections: [...this.state.sections, secName],
+        secName: ''
+      })
+    }
   }
 
   removeSection = sec => {
@@ -128,6 +139,14 @@ class ProjectDetail extends React.Component {
     this.setState({ items: this.state.items.concat(newItem) })
   }
 
+  updateItem = (section, itemToUpdate) => {
+    const items = this.state.items.map(i => {
+      const item = { ...i, ...itemToUpdate }
+      return i._id === item._id ? item : i
+    })
+    this.setState({ items })
+  }
+
   removeItem = (section, id) => {
     const items = this.state.items.filter(i => i.section === section && i._id !== id)
     this.setState({ items })
@@ -135,7 +154,7 @@ class ProjectDetail extends React.Component {
 
   render() {
     const { classes } = this.props
-    const { tab, name, description, items, sections } = this.state
+    const { tab, name, gross, description, items, sections } = this.state
     return (
       <Paper square>
         <Tabs
@@ -146,6 +165,7 @@ class ProjectDetail extends React.Component {
         >
           <Tab label="Obecné" />
           <Tab label="Díly" />
+          <Tab label="Ceny" />
         </Tabs>
         <Card>
           <CardContent>
@@ -209,6 +229,7 @@ class ProjectDetail extends React.Component {
                         <ProjectItems
                           items={items.filter(i => i.section === sec)}
                           addItem={item => this.addItem(sec, item)}
+                          updateItem={item => this.updateItem(sec, item)}
                           removeItem={id => this.removeItem(sec, id)}
                         />
                       </ExpansionPanelDetails>
@@ -219,6 +240,21 @@ class ProjectDetail extends React.Component {
                     </ExpansionPanel>
                   )
                 })}
+              </div>
+              <div style={{ display: tab === 2 ? 'block' : 'none' }}>
+                <TextField
+                  label="Marže"
+                  className={classes.textField}
+                  value={gross}
+                  onChange={this.handleChange('gross')}
+                  margin="normal"
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                  }}
+                />
+                <Typography variant="h4">
+                  Celková cena: {this.calc()} Kc
+                </Typography>
               </div>
             </form>
           </CardContent>

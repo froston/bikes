@@ -26,6 +26,7 @@ Meteor.methods({
         items: project.items,
         sections: project.sections,
         description: project.description,
+        gross: project.gross,
         lastUpdate: new Date(),
       });
     } else {
@@ -34,6 +35,7 @@ Meteor.methods({
         description: project.description,
         items: [],
         sections: [],
+        gross: project.gross,
         createdAt: new Date(),
         lastUpdate: new Date(),
       });
