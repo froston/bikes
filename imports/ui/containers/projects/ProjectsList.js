@@ -9,8 +9,7 @@ import { Table } from '../../components'
 class ProjectsList extends React.Component {
   rows = [
     { id: 'name', label: 'Název' },
-    { id: 'description', label: 'Popis' },
-    { id: 'totalPrice', label: 'Celková cena' },
+    { id: 'totalPrice', label: 'Celková cena', render: price => `${price} Kč` },
     { id: 'status', label: 'Status objednávky' },
     { id: 'date', label: 'Datum vytvoření', render: date => moment(date).format("DD.MM.YYYY") },
     {
@@ -40,7 +39,7 @@ class ProjectsList extends React.Component {
     const { data, ready } = this.props;
     return (
       <Table
-        title="Seznam Projektu"
+        title="Seznam Projektů"
         rows={this.rows}
         data={data}
         ready={ready}

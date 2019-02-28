@@ -22,13 +22,12 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
-import { ProjectItems } from './'
+import { ProjectItems, Prices, Info } from './'
 import { Projects } from '../../../api/projects';
 
 const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
+  root: {
+    flexGrow: 1,
   },
   heading: {
     fontSize: 20
@@ -38,14 +37,14 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
     width: 500,
   },
-  addInput: {
-    margin: '20px 0'
-  },
   button: {
     margin: theme.spacing.unit,
   },
   leftIcon: {
     marginRight: theme.spacing.unit,
+  },
+  card: {
+    height: '100%'
   },
   cardActions: {
     background: '#f5f5f5',
@@ -58,12 +57,15 @@ class ProjectDetail extends React.Component {
   state = {
     tab: 0,
     name: '',
+    status: '',
     description: '',
     secName: '',
     sections: [],
     items: [],
     modal: false,
-    gross: 40
+    gross: 40,
+    fees: 0,
+    postage: 0
   }
 
   componentDidMount() {
@@ -78,20 +80,18 @@ class ProjectDetail extends React.Component {
       Meteor.subscribe('project', _id);
       let project = Projects.findOne(_id);
       if (project) {
-        this.setState({
-          _id: project._id,
-          name: project.name,
-          description: project.description,
-          items: project.items || [],
-          sections: project.sections || []
-        });
+        this.setState({ ...project });
       }
     });
   }
 
   handleSubmit = e => {
     e.preventDefault()
-    Meteor.call('projects.save', this.state);
+    const project = {
+      ...this.state,
+      ...this.calcPrices()
+    }
+    Meteor.call('projects.save', project);
     this.props.history.push('/projekty')
   }
 
@@ -101,12 +101,18 @@ class ProjectDetail extends React.Component {
     });
   }
 
-  calc = () => {
+  calcPrices = () => {
+    const { gross, fees, postage } = this.state
     let totalPrice = 0
     this.state.items.forEach(i => {
       totalPrice += i.price_mo * i.quantity
     })
-    return totalPrice / ((100 - this.state.gross) / 100)
+    return {
+      netPrice: Math.round(totalPrice),
+      gross: Math.round(gross),
+      grossPrice: Math.round(totalPrice / ((100 - gross) / 100)),
+      totalPrice: Math.round((totalPrice / ((100 - gross) / 100)) + Number(fees) + Number(postage))
+    }
   }
 
   changeTab = (e, tab) => this.setState({ tab })
@@ -132,14 +138,11 @@ class ProjectDetail extends React.Component {
   }
 
   addItem = (section, item) => {
-    const newItem = {
-      ...item,
-      section
-    }
+    const newItem = { ...item, section }
     this.setState({ items: this.state.items.concat(newItem) })
   }
 
-  updateItem = (section, itemToUpdate) => {
+  updateItem = (itemToUpdate) => {
     const items = this.state.items.map(i => {
       const item = { ...i, ...itemToUpdate }
       return i._id === item._id ? item : i
@@ -147,138 +150,113 @@ class ProjectDetail extends React.Component {
     this.setState({ items })
   }
 
-  removeItem = (section, id) => {
-    const items = this.state.items.filter(i => i.section === section && i._id !== id)
+  removeItem = (id) => {
+    const items = this.state.items.filter(i => i._id !== id)
     this.setState({ items })
   }
 
   render() {
     const { classes } = this.props
-    const { tab, name, gross, description, items, sections } = this.state
+    const { tab, items, sections } = this.state
     return (
-      <Paper square>
-        <Tabs
-          value={tab}
-          indicatorColor="primary"
-          textColor="primary"
-          onChange={this.changeTab}
-        >
-          <Tab label="Obecné" />
-          <Tab label="Díly" />
-          <Tab label="Ceny" />
-        </Tabs>
-        <Card>
-          <CardContent>
-            <form noValidate autoComplete="off">
-              <div style={{ display: tab === 0 ? 'block' : 'none' }}>
-                <div className={classes.container}>
+      <div className={classes.root}>
+        <Paper square>
+          <Tabs
+            value={tab}
+            indicatorColor="primary"
+            textColor="primary"
+            onChange={this.changeTab}
+          >
+            <Tab label="Obecné" />
+            <Tab label="Díly" />
+            <Tab label="Ceny" />
+          </Tabs>
+          <Card className={classes.card}>
+            <CardContent>
+              <form noValidate autoComplete="off">
+                <div style={{ display: tab === 0 ? 'block' : 'none' }}>
+                  <Info handleChange={this.handleChange} values={this.state} />
+                </div>
+                <div style={{ display: tab === 1 ? 'block' : 'none' }}>
                   <TextField
-                    label="Název projetku"
+                    label="Přidat sekci"
+                    variant="outlined"
                     className={classes.textField}
-                    value={name}
-                    onChange={this.handleChange('name')}
-                    margin="normal"
+                    style={{ margin: '20px 0' }}
+                    value={this.state.secName}
+                    onKeyPress={(ev) => {
+                      if (ev.key === 'Enter') {
+                        ev.preventDefault();
+                        this.addSection()
+                      }
+                    }}
+                    onChange={this.handleChange('secName')}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="Přidat panel"
+                            onClick={this.addSection}
+                          >
+                            <AddBoxIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  {sections.map(sec => {
+                    return (
+                      <ExpansionPanel key={sec} defaultExpanded square>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                          <Typography className={classes.heading}>{sec}</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <ProjectItems
+                            items={items.filter(i => i.section === sec)}
+                            addItem={item => this.addItem(sec, item)}
+                            updateItem={this.updateItem}
+                            removeItem={this.removeItem}
+                          />
+                        </ExpansionPanelDetails>
+                        <Divider />
+                        <ExpansionPanelActions>
+                          <Button size="small" color="secondary" onClick={() => this.removeSection(sec)}>Smazat sekci</Button>
+                        </ExpansionPanelActions>
+                      </ExpansionPanel>
+                    )
+                  })}
+                </div>
+                <div style={{ display: tab === 2 ? 'block' : 'none' }}>
+                  <Prices
+                    handleChange={this.handleChange}
+                    calcPrices={this.calcPrices}
+                    values={this.state}
                   />
                 </div>
-                <div className={classes.container}>
-                  <TextField
-                    label="Popis"
-                    className={classes.textField}
-                    multiline
-                    rows="4"
-                    value={description}
-                    onChange={this.handleChange('description')}
-                    margin="normal"
-                  />
-                </div>
-              </div>
-              <div style={{ display: tab === 1 ? 'block' : 'none' }}>
-                <TextField
-                  label="Přidat sekci"
-                  variant="outlined"
-                  className={classes.textField}
-                  style={{ margin: '20px 0' }}
-                  value={this.state.secName}
-                  onKeyPress={(ev) => {
-                    if (ev.key === 'Enter') {
-                      ev.preventDefault();
-                      this.addSection()
-                    }
-                  }}
-                  onChange={this.handleChange('secName')}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="Přidat panel"
-                          onClick={this.addSection}
-                        >
-                          <AddBoxIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                {sections.map(sec => {
-                  return (
-                    <ExpansionPanel key={sec} square>
-                      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography className={classes.heading}>{sec}</Typography>
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails>
-                        <ProjectItems
-                          items={items.filter(i => i.section === sec)}
-                          addItem={item => this.addItem(sec, item)}
-                          updateItem={item => this.updateItem(sec, item)}
-                          removeItem={id => this.removeItem(sec, id)}
-                        />
-                      </ExpansionPanelDetails>
-                      <Divider />
-                      <ExpansionPanelActions>
-                        <Button size="small" color="secondary" onClick={() => this.removeSection(sec)}>Smazat sekci</Button>
-                      </ExpansionPanelActions>
-                    </ExpansionPanel>
-                  )
-                })}
-              </div>
-              <div style={{ display: tab === 2 ? 'block' : 'none' }}>
-                <TextField
-                  label="Marže"
-                  className={classes.textField}
-                  value={gross}
-                  onChange={this.handleChange('gross')}
-                  margin="normal"
-                  InputProps={{
-                    endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                  }}
-                />
-                <Typography variant="h4">
-                  Celková cena: {this.calc()} Kc
-                </Typography>
-              </div>
-            </form>
-          </CardContent>
-          <CardActions className={classes.cardActions}>
-            <Button
-              onClick={this.handleSubmit}
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              <SaveIcon className={classes.leftIcon} />
-              Uložit
+              </form>
+            </CardContent>
+            <CardActions className={classes.cardActions}>
+              <Button
+                onClick={this.handleSubmit}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+              >
+                <SaveIcon className={classes.leftIcon} />
+                Uložit
             </Button>
-            <Button
-              onClick={this.handleDelete}
-              className={classes.button}
-              color="secondary"
-            >
-              <ClearIcon className={classes.leftIcon} />
-              Smazat
+              <Button
+                onClick={this.handleDelete}
+                className={classes.button}
+                color="secondary"
+              >
+                <ClearIcon className={classes.leftIcon} />
+                Smazat
             </Button>
-          </CardActions>
-        </Card>
-      </Paper>
+            </CardActions>
+          </Card>
+        </Paper>
+      </div>
     );
   }
 }

@@ -23,19 +23,27 @@ Meteor.methods({
       check(project._id, String);
       Projects.update(project._id, {
         name: project.name,
+        status: project.status,
         items: project.items,
         sections: project.sections,
         description: project.description,
         gross: project.gross,
+        totalPrice: project.totalPrice,
+        postage: project.postage,
+        fees: project.fees,
         lastUpdate: new Date(),
       });
     } else {
       Projects.insert({
         name: project.name,
+        status: project.status,
         description: project.description,
-        items: [],
-        sections: [],
+        items: project.items,
+        sections: project.sections,
         gross: project.gross,
+        totalPrice: project.totalPrice,
+        postage: project.postage,
+        fees: project.fees,
         createdAt: new Date(),
         lastUpdate: new Date(),
       });
