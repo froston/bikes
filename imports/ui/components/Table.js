@@ -97,9 +97,12 @@ class EnhancedTable extends React.Component {
             component="div"
             count={this.props.totalRows}
             rowsPerPage={this.props.rowsPerPage}
+            rowsPerPageOptions={[50, 100, 200]}
             page={this.props.page}
             backIconButtonProps={{ 'aria-label': 'Předchozí stránka' }}
             nextIconButtonProps={{ 'aria-label': 'Další stránka' }}
+            labelRowsPerPage='Řádků na stránce:'
+            labelDisplayedRows={({ from, to, count }) => `${from}- ${to} z ${count}`}
             onChangePage={this.props.handlePage}
             onChangeRowsPerPage={this.props.handleRowsPerPage}
           />

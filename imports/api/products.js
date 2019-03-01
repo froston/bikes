@@ -19,11 +19,20 @@ if (Meteor.isServer) {
       condition = searchCondition
     }
     if (filters) {
-      let main = filters.catMain.length ? { category: { $in: filters.catMain } } : {}
-      let sec = filters.catSecond.length ? { category: { $in: filters.catSecond } } : {}
-      let third = filters.catThird.length ? { category: { $in: filters.catThird } } : {}
-      filterCondition = { $and: [main, sec, third] }
-      condition = filterCondition
+      let filterArray = []
+      if (filters.catMain.length) {
+        filterArray.push({ category: { $in: filters.catMain } })
+      }
+      if (filters.catSecond.length) {
+        filterArray.push({ category: { $in: filters.catSecond } })
+      }
+      if (filters.catThird.length) {
+        filterArray.push({ category: { $in: filters.catThird } })
+      }
+      if (filterArray.length) {
+        filterCondition = { $and: filterArray }
+        condition = filterCondition
+      }
     }
     if (searchValue && filters) {
       condition = { ...searchCondition, ...filterCondition }

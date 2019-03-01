@@ -73,14 +73,14 @@ class Prices extends React.Component {
                 Cena za materiál: {prices.netPrice} Kč
               </Typography>
               <Typography variant="h5" className={classes.price} gutterBottom>
-                Marže: {prices.gross} %
+                Marže: {prices.gross} Kč
               </Typography>
               <Typography variant="h5" className={classes.price} gutterBottom>
                 Cena s marží: {prices.grossPrice} Kč
               </Typography>
               <br />
-              <Typography variant="h3" className={classes.price} gutterBottom>
-                Celková cena: {prices.totalPrice} Kč
+              <Typography variant="h5" className={classes.price} gutterBottom>
+                <b>Celková cena: {prices.totalPrice} Kč</b>
               </Typography>
             </Paper>
           </Grid>

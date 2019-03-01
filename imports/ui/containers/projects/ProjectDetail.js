@@ -105,14 +105,16 @@ class ProjectDetail extends React.Component {
     const { gross, fees, postage } = this.state
     let totalPrice = 0
     this.state.items.forEach(i => {
-      totalPrice += i.price_mo * i.quantity
+      totalPrice += i.price_vo * i.quantity
     })
-    return {
+    const grossPrice = Math.round(totalPrice / ((100 - gross) / 100))
+    const prices = {
       netPrice: Math.round(totalPrice),
-      gross: Math.round(gross),
-      grossPrice: Math.round(totalPrice / ((100 - gross) / 100)),
-      totalPrice: Math.round((totalPrice / ((100 - gross) / 100)) + Number(fees) + Number(postage))
+      gross: grossPrice - Math.round(totalPrice),
+      grossPrice: grossPrice,
+      totalPrice: grossPrice + Number(fees) + Number(postage)
     }
+    return prices
   }
 
   changeTab = (e, tab) => this.setState({ tab })

@@ -76,7 +76,7 @@ class ProductDetail extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.product !== this.props.product) {
-      this.setState({ ...this.props.product[0] })
+      this.setState({ ...this.props.product })
     }
   }
 
@@ -218,6 +218,6 @@ export default withTracker(props => {
   const id = props.match ? props.match.params.id : props.id
   Meteor.subscribe('product', id);
   return {
-    product: Products.find({}).fetch(),
+    product: Products.findOne({}),
   }
 })(withStyles(styles)(withRouter(ProductDetail)));

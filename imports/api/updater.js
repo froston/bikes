@@ -48,9 +48,7 @@ const saveItem = (eshop, item, attrs) => {
       category: category,
       price_vo: parseFloat(price_vo),
       price_mo: parseFloat(price_mo),
-      //price_vo_display: Math.round(price_vo),
-      //price_mo_display: Math.round(price_mo),
-      amount: amount,
+      amount: Number(amount),
       unit: getTagValue(item, attrs.unit),
       photo: getTagValue(item, attrs.photo),
       eshop,
@@ -66,7 +64,8 @@ const autoUpdate = () => {
     const eshops = Eshops.find({}).fetch();
     eshops.forEach(eshop => {
       if (eshop.autoUpdate) {
-        updateEshop(eshop)
+        console.log(eshop)
+        //updateEshop(eshop)
       }
     })
     resolve("DONE")

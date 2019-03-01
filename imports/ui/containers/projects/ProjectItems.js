@@ -48,8 +48,7 @@ class ProjectItems extends React.Component {
     },
     { id: 'eshop', label: 'E-shop' },
     { id: 'name', label: 'Název' },
-    { id: 'price_mo', label: 'Cena MOC' },
-    { id: 'price_vo', label: 'Cena VOC' },
+    { id: 'price_vo', label: 'Cena', render: p => `${Math.round(p)} Kč` },
     { id: 'quantity', label: 'Mnozstvi' },
     {
       id: 'actions', label: '', render: (text, rec) => {

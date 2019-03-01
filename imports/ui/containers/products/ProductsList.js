@@ -32,7 +32,7 @@ const tableConfig = new ReactiveVar({
   searchValue: null,
   filters: null,
   page: 0,
-  rowsPerPage: 10,
+  rowsPerPage: 50,
   order: 'asc',
   orderBy: '_id'
 });
@@ -71,7 +71,7 @@ class ProductList extends React.Component {
       { id: 'category', label: 'Kategorie', visible: columns['Kategorie'], render: c => c && c.map(cat => <Chip key={cat} label={cat} className={this.props.classes.chip} />) },
       { id: 'price_mo', label: 'MO Cena', visible: columns['MO Cena'], render: c => Math.round(c) },
       { id: 'price_vo', label: 'VO Cena', visible: columns['VO Cena'], render: c => Math.round(c) },
-      { id: 'amount', label: 'Skladem', visible: columns['Skladem'], render: (text, rec) => rec.amount && rec.unit && `${rec.amount} ${rec.unit}` },
+      { id: 'amount', label: 'Skladem', visible: columns['Skladem'], render: (text, rec) => `${rec.amount} ${rec.unit}` },
       {
         id: 'actions', label: '', render: (text, rec) => {
           return (
@@ -188,7 +188,11 @@ export default withTracker(() => {
     config.orderBy
   );
   return {
-    data: Products.find({}).fetch(),
+    data: Products.find({}, {
+      skip: config.page * config.rowsPerPage,
+      limit: config.rowsPerPage,
+      sort: { [config.orderBy]: config.order === 'asc' ? 1 : -1 }
+    }).fetch(),
     totalRows: Counts.get('totalRows'),
     ready: handle.ready(),
     tableConfig
