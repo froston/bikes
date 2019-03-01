@@ -5,8 +5,10 @@ export const Projects = new Mongo.Collection('projects');
 
 if (Meteor.isServer) {
   Meteor.publish('projects', function (filter) {
-    console.log(filter)
-    const condition = filter ? { status: filter.status } : {}
+    let condition = {}
+    if (filter) {
+      condition = filter.status ? { status: filter.status } : {}
+    }
     return Projects.find(condition);
   });
   Meteor.publish('project', function (_id) {

@@ -6,6 +6,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import BallIcon from '@material-ui/icons/TripOrigin';
+import { orderStatuses } from '../utils/orderStatus'
 
 const styles = theme => ({
   formControl: {
@@ -15,14 +16,6 @@ const styles = theme => ({
     marginRight: 10
   }
 });
-
-const orderStatuses = [
-  { value: 'Nová', color: '#3f51b5' },
-  { value: 'Přijatá', color: '#03a9f4' },
-  { value: 'Zpracovává se', color: '#ff9800' },
-  { value: 'Vyřízená', color: '#4caf50' },
-  { value: 'Zrušená', color: '#f44336' },
-]
 
 const StatusSelect = ({ classes, value, onChange }) => (
   <FormControl className={classes.formControl}>

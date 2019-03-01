@@ -60,7 +60,7 @@ class EshopsList extends React.Component {
 export default withTracker(() => {
   const handle = Meteor.subscribe('eshops');
   return {
-    data: Eshops.find({}).fetch(),
+    data: Eshops.find({}, { sort: { _id: 1 } }).fetch(),
     ready: handle.ready(),
   };
 })(withRouter(EshopsList))

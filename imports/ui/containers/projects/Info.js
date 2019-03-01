@@ -33,7 +33,7 @@ class Info extends React.Component {
         </div>
         <div className={classes.container}>
           <div className={classes.textField}>
-            <StatusSelect value={values.status} onChange={handleChange} />
+            <StatusSelect value={values.status} onChange={(handleChange('status'))} />
           </div>
         </div>
         <div className={classes.container}>

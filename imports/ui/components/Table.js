@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { TableToolbar, TableHead } from './'
+import { getColor } from '../utils/orderStatus'
 
 const styles = theme => ({
   root: {
@@ -81,6 +82,7 @@ class EnhancedTable extends React.Component {
                     onClick={event => this.handleClick(event, n)}
                     tabIndex={-1}
                     selected={selected == n._id}
+                    style={{ borderLeft: `8px solid ${getColor(n.status)}` }}
                   >
                     {rows.map(row => {
                       const text = row && row.render ? row.render(n[row.id], n, index) : String(n[row.id])

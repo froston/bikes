@@ -13,8 +13,8 @@ const tableConfig = new ReactiveVar({
 class ProjectsList extends React.Component {
   rows = [
     { id: 'name', label: 'Název' },
-    { id: 'totalPrice', label: 'Celková cena', render: price => `${price} Kč` },
     { id: 'status', label: 'Status objednávky' },
+    { id: 'totalPrice', label: 'Celková cena', render: price => `${price} Kč` },
     { id: 'date', label: 'Datum vytvoření', render: date => moment(date).format("DD.MM.YYYY") },
     {
       id: 'actions', label: '', render: (text, rec) => {
@@ -78,7 +78,7 @@ export default withTracker(() => {
   const config = tableConfig.get();
   const handle = Meteor.subscribe('projects', config.filters)
   return {
-    data: Projects.find({}).fetch(),
+    data: Projects.find({}, { sort: { _id: 1 } }).fetch(),
     ready: handle.ready(),
     tableConfig
   };

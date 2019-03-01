@@ -33,6 +33,7 @@ const styles = theme => ({
     marginLeft: -12,
   },
   buttonLast: {
+    margin: theme.spacing.unit,
     marginLeft: 'auto'
   },
   leftIcon: {
@@ -177,7 +178,7 @@ class EshopDetail extends React.Component {
               <Button
                 onClick={this.handleDeleteProducts}
                 color="secondary"
-                className={[classes.button, classes.buttonLast]}
+                className={classes.buttonLast}
               >
                 <ClearIcon className={classes.leftIcon} />
                 Smazat produkty
