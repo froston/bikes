@@ -1,10 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
+import { StatusSelect } from '../../components'
 
 const styles = theme => ({
   container: {
@@ -19,8 +16,6 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 2,
   },
 })
-
-const orderStatus = ['Nová', 'Přijatá', 'Zpracovává se', 'Vyřízená', 'Zrušená']
 
 class Info extends React.Component {
   render() {
@@ -37,17 +32,9 @@ class Info extends React.Component {
           />
         </div>
         <div className={classes.container}>
-          <FormControl className={classes.textField}>
-            <InputLabel htmlFor="age-simple">Stav objednávky</InputLabel>
-            <Select
-              value={values.status}
-              onChange={handleChange('status')}
-            >
-              {orderStatus.map(o => {
-                return <MenuItem key={o} value={o}>{o}</MenuItem>
-              })}
-            </Select>
-          </FormControl>
+          <div className={classes.textField}>
+            <StatusSelect value={values.status} onChange={handleChange} />
+          </div>
         </div>
         <div className={classes.container}>
           <TextField

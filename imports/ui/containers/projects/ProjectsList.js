@@ -4,7 +4,11 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment'
 import { Projects } from '../../../api/projects';
-import { Table } from '../../components'
+import { Table, FilterProjects } from '../../components'
+
+const tableConfig = new ReactiveVar({
+  filters: null,
+});
 
 class ProjectsList extends React.Component {
   rows = [
@@ -22,19 +26,37 @@ class ProjectsList extends React.Component {
       }
     }
   ];
+
+  componentDidMount() {
+    this.setConfig('filters', null)
+  }
+
   handleCreate = () => {
     const { match, history } = this.props
     history.push(`${match.url}/novy`)
   }
+
   handleRemove = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
     Meteor.call('projects.remove', id)
   }
+
   handleEdit = project => {
     const { match, history } = this.props
     history.push(`${match.url}/${project._id}`)
   }
+
+  handleFilter = filters => {
+    this.setConfig('filters', filters)
+  }
+
+  setConfig = (name, value) => {
+    const config = this.props.tableConfig.get();
+    config[name] = value;
+    this.props.tableConfig.set(config);
+  }
+
   render() {
     const { data, ready } = this.props;
     return (
@@ -46,15 +68,18 @@ class ProjectsList extends React.Component {
         handleClick={this.handleEdit}
         handleCreate={this.handleCreate}
         handleRemove={this.handleRemove}
+        filter={<FilterProjects handleFilter={this.handleFilter} />}
       />
     );
   }
 }
 
 export default withTracker(() => {
-  const handle = Meteor.subscribe('projects')
+  const config = tableConfig.get();
+  const handle = Meteor.subscribe('projects', config.filters)
   return {
     data: Projects.find({}).fetch(),
     ready: handle.ready(),
+    tableConfig
   };
 })(ProjectsList);

@@ -20,17 +20,11 @@ const styles = theme => ({
     padding: 20,
     width: 400
   },
-  typography: {
-    margin: theme.spacing.unit * 2,
-  },
   button: {
     margin: theme.spacing.unit,
   },
   navButton: {
     marginTop: 20
-  },
-  title: {
-    margin: theme.spacing.unit,
   },
   formControl: {
     margin: theme.spacing.unit,
