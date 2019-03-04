@@ -63,6 +63,16 @@ class XmlAtr extends React.Component {
 
           <Grid item sm={6} md={4}>
             <TextField
+              label="Popis"
+              className={classes.textField}
+              value={values.desc}
+              onChange={handleChange('desc')}
+              margin="normal"
+            />
+          </Grid>
+
+          <Grid item sm={6} md={4}>
+            <TextField
               label="EAN"
               className={classes.textField}
               value={values.ean}

@@ -42,6 +42,7 @@ const saveItem = (eshop, item, attrs) => {
     }
     const itemToInsert = {
       name: getTagValue(item, attrs.name),
+      desc: getTagValue(item, attrs.desc),
       ean: getTagValue(item, attrs.ean),
       code: getTagValue(item, attrs.id),
       producer: getTagValue(item, attrs.producer),

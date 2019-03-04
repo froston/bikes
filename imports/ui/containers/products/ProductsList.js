@@ -9,6 +9,8 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Products } from '../../../api/products';
 import { Table, FilterProducts, SetColumns } from '../../components'
+import { debounce } from '../../utils/funcs'
+import { getColumns, setColumns, changeColumns } from '../../utils/storage'
 
 const styles = theme => ({
   avatar: {
@@ -43,11 +45,19 @@ class ProductList extends React.Component {
   }
 
   componentDidMount() {
-    const columns = this.getRows().reduce((obj, item) => {
-      obj[item.label] = true
-      return obj
-    }, {})
-    this.setState({ columns })
+    const columns = getColumns()
+    if (!columns) {
+      let cols = {}
+      this.getRows().forEach(item => {
+        if (item.label !== "") {
+          cols[item.label] = true
+        }
+      })
+      this.setState({ columns: cols })
+      setColumns(cols)
+    } else {
+      this.setState({ columns })
+    }
   }
 
   getRows = () => {
@@ -66,11 +76,16 @@ class ProductList extends React.Component {
           />
         )
       },
+      { id: 'code', label: 'Kód', visible: columns['Kód'] },
       { id: 'eshop', label: 'Eshop', visible: columns['Eshop'] },
+      { id: 'ean', label: 'EAN', visible: columns['EAN'] },
       { id: 'name', label: 'Název', visible: columns['Název'] },
+      { id: 'desc', label: 'Popis', visible: columns['Popis'] },
       { id: 'category', label: 'Kategorie', visible: columns['Kategorie'], render: c => c && c.map(cat => <Chip key={cat} label={cat} className={this.props.classes.chip} />) },
       { id: 'price_mo', label: 'MO Cena', visible: columns['MO Cena'], render: c => Math.round(c) },
       { id: 'price_vo', label: 'VO Cena', visible: columns['VO Cena'], render: c => Math.round(c) },
+      { id: 'producer', label: 'Výrobce', visible: columns['Výrobce'] },
+      { id: 'weight', label: 'Hmotnost', visible: columns['Hmotnost'] },
       { id: 'amount', label: 'Skladem', visible: columns['Skladem'], render: (text, rec) => `${rec.amount} ${rec.unit}` },
       {
         id: 'actions', label: '', render: (text, rec) => {
@@ -100,10 +115,10 @@ class ProductList extends React.Component {
     }
   }
 
-  handleSearch = e => {
+  handleSearch = debounce(searchValue => {
     this.setConfig('page', 0)
-    this.setConfig('searchValue', e.target.value)
-  }
+    this.setConfig('searchValue', searchValue)
+  }, 400)
 
   handleFilter = filters => {
     this.setConfig('page', 0)
@@ -126,9 +141,10 @@ class ProductList extends React.Component {
   handleRowsPerPage = e => this.setConfig('rowsPerPage', e.target.value)
 
   handleColumns = (name, value) => {
-    const columns = Object.assign({}, this.state.columns)
+    const columns = getColumns()
     columns[name] = value
     this.setState({ columns })
+    setColumns(columns)
   }
 
   setConfig = (name, value) => {
@@ -161,7 +177,7 @@ class ProductList extends React.Component {
         orderBy={config.orderBy}
         rowsPerPage={config.rowsPerPage}
         totalRows={totalRows}
-        handleSearch={this.handleSearch}
+        handleSearch={e => this.handleSearch(e.target.value)}
         handlePage={this.handlePage}
         handleRowsPerPage={this.handleRowsPerPage}
         handleSort={this.handleSort}

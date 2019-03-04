@@ -4,10 +4,18 @@ import { check } from 'meteor/check';
 export const Projects = new Mongo.Collection('projects');
 
 if (Meteor.isServer) {
-  Meteor.publish('projects', function (filter) {
+  Meteor.publish('projects', function (filter, searchValue) {
     let condition = {}
+    if (searchValue) {
+      let searchCondition = { $text: { $search: searchValue } }
+      condition = searchCondition
+    }
     if (filter) {
-      condition = filter.status ? { status: filter.status } : {}
+      let filterCondition = filter.status ? { status: filter.status } : {}
+      condition = filterCondition
+    }
+    if (searchValue && filter) {
+      condition = { ...searchCondition, ...filterCondition }
     }
     return Projects.find(condition);
   });

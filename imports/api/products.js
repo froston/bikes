@@ -15,7 +15,7 @@ if (Meteor.isServer) {
   Meteor.publish('products', function (page, limit, searchValue, filters, order, orderBy) {
     let condition = {}
     if (searchValue) {
-      searchCondition = { $text: { $search: searchValue } }
+      let searchCondition = { $text: { $search: searchValue } }
       condition = searchCondition
     }
     if (filters) {

@@ -9,17 +9,34 @@ const styles = {
   grid: {
     flexGrow: 1,
     height: '100%',
-    background: 'linear-gradient(to right bottom, #1a237e, #e8eaf6)'
+    background: 'linear-gradient(to right bottom, #1a237e, #e91e63)'
+  },
+  title: {
+    color: 'white'
   },
   textField: {
-    marginTop: 15,
+    marginTop: 25,
     width: 300
-  }
+  },
+  cssLabel: {
+    '&$cssFocused': {
+      color: 'white',
+    },
+  },
+  cssFocused: {},
+  cssOutlinedInput: {
+    '&$cssFocused $notchedOutline': {
+      borderColor: 'white',
+    },
+  },
+  notchedOutline: {
+    borderColor: 'white',
+  },
 }
 
 class Login extends React.Component {
   state = {
-    password: null,
+    password: '',
     error: false
   }
 
@@ -30,7 +47,7 @@ class Login extends React.Component {
         localStorage.setItem('logged', true)
         this.props.history.push('/projekty')
       } else {
-        this.setState({ password: null, error: true })
+        this.setState({ password: '', error: true })
       }
     }
   }
@@ -50,17 +67,34 @@ class Login extends React.Component {
         className={classes.grid}
       >
         <Grid item>
-          <Typography variant="h4">Vítej v Jakubkolo!</Typography>
-          <TextField
-            error={error}
-            label="Heslo"
-            variant="outlined"
-            type="password"
-            value={password}
-            onChange={e => this.handleChange(e.target.value)}
-            onKeyPress={this.handleLogin}
-            className={classes.textField}
-          />
+          <Typography variant="h4" className={classes.title}>
+            Vítej v Jakubkolo!
+          </Typography>
+          <form noValidate>
+            <TextField
+              error={error}
+              label="Heslo"
+              variant="outlined"
+              type="password"
+              value={password}
+              onChange={e => this.handleChange(e.target.value)}
+              onKeyPress={this.handleLogin}
+              className={classes.textField}
+              InputLabelProps={{
+                classes: {
+                  root: classes.cssLabel,
+                  focused: classes.cssFocused,
+                },
+              }}
+              InputProps={{
+                classes: {
+                  root: classes.cssOutlinedInput,
+                  focused: classes.cssFocused,
+                  notchedOutline: classes.notchedOutline,
+                },
+              }}
+            />
+          </form>
         </Grid>
       </Grid>
     );

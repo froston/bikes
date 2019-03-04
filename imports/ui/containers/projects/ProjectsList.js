@@ -3,11 +3,13 @@ import { withTracker } from 'meteor/react-meteor-data';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment'
+import { debounce } from '../../utils/funcs'
 import { Projects } from '../../../api/projects';
 import { Table, FilterProjects } from '../../components'
 
 const tableConfig = new ReactiveVar({
   filters: null,
+  searchValue: null,
 });
 
 class ProjectsList extends React.Component {
@@ -51,6 +53,10 @@ class ProjectsList extends React.Component {
     this.setConfig('filters', filters)
   }
 
+  handleSearch = debounce(searchValue => {
+    this.setConfig('searchValue', searchValue)
+  }, 400)
+
   setConfig = (name, value) => {
     const config = this.props.tableConfig.get();
     config[name] = value;
@@ -68,6 +74,7 @@ class ProjectsList extends React.Component {
         handleClick={this.handleEdit}
         handleCreate={this.handleCreate}
         handleRemove={this.handleRemove}
+        handleSearch={e => this.handleSearch(e.target.value)}
         filter={<FilterProjects handleFilter={this.handleFilter} />}
       />
     );
@@ -76,7 +83,7 @@ class ProjectsList extends React.Component {
 
 export default withTracker(() => {
   const config = tableConfig.get();
-  const handle = Meteor.subscribe('projects', config.filters)
+  const handle = Meteor.subscribe('projects', config.filters, config.searchValue)
   return {
     data: Projects.find({}, { sort: { _id: 1 } }).fetch(),
     ready: handle.ready(),

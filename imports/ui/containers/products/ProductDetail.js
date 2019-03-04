@@ -29,7 +29,7 @@ const styles = theme => ({
     color: 'black'
   },
   categories: {
-    margin: '10px 0 30px'
+    margin: '10px 0 20px'
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -41,6 +41,7 @@ const styles = theme => ({
     minWidth: 'initial',
     maxWidth: '42em',
     maxHeight: '15em',
+    padding: 10
   },
   button: {
     margin: theme.spacing.unit,
@@ -63,6 +64,7 @@ class ProductDetail extends React.Component {
     _id: '',
     code: '',
     name: '',
+    desc: '',
     ean: '',
     photo: '',
     price_mo: '',
@@ -100,7 +102,7 @@ class ProductDetail extends React.Component {
 
   render() {
     const { classes } = this.props
-    const { code, url, ean, name, category, photo, price_mo, price_vo, producer, amount, unit, eshop, weight } = this.state
+    const { code, url, ean, name, desc, category, photo, price_mo, price_vo, producer, amount, unit, eshop, weight } = this.state
     return (
       <Paper square>
         <Card>
@@ -181,6 +183,14 @@ class ProductDetail extends React.Component {
                     value={weight}
                     margin="normal"
                   />
+                  <TextField
+                    label="Popis"
+                    className={classes.textField}
+                    value={desc}
+                    margin="normal"
+                    multiline
+                    rows="4"
+                  />
                 </Grid>
               </Grid>
             </div>
@@ -214,6 +224,7 @@ class ProductDetail extends React.Component {
 
 export default withTracker(props => {
   const _id = props.match ? props.match.params.id : props.id
+  console.log(_id)
   Meteor.subscribe('product', _id);
   return {
     product: Products.findOne({ _id }),

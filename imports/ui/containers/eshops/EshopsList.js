@@ -29,11 +29,13 @@ class EshopsList extends React.Component {
     const { match, history } = this.props
     history.push(`${match.url}/novy`)
   }
+
   handleRemove = (e, id, eshop) => {
     e.preventDefault()
     e.stopPropagation()
     Meteor.call('eshops.remove', id, eshop)
   }
+
   handleEdit = eshop => {
     const { match, history } = this.props
     history.push(`${match.url}/${eshop._id}`)

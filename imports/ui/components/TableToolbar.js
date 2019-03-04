@@ -99,11 +99,13 @@ class EnhancedTableToolbar extends React.Component {
         <div className={classes.spacer} />
         <div className={classes.actions}>
           <div className={classes.actionButtons}>
-            <Tooltip title="Hledat">
-              <IconButton className={classes.button} onClick={this.toggleSearch}>
-                <SearchIcon />
-              </IconButton >
-            </Tooltip>
+            {this.props.handleSearch &&
+              <Tooltip title="Hledat">
+                <IconButton className={classes.button} onClick={this.toggleSearch}>
+                  <SearchIcon />
+                </IconButton >
+              </Tooltip>
+            }
             {this.props.setColumns &&
               <Tooltip title="Nastavit sloupce">
                 {setColumns}
