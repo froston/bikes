@@ -1,4 +1,12 @@
+body {
+  margin: 0
+}
+
 a {
   background-color: transparent;
   text-decoration: none;
+}
+
+#root {
+  height: 100vh;
 }

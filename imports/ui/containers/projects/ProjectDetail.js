@@ -110,7 +110,7 @@ class ProjectDetail extends React.Component {
     const grossPrice = Math.round(totalPrice / ((100 - gross) / 100))
     const prices = {
       netPrice: Math.round(totalPrice),
-      gross: grossPrice - Math.round(totalPrice),
+      grossCount: grossPrice - Math.round(totalPrice),
       grossPrice: grossPrice,
       totalPrice: grossPrice + Number(fees) + Number(postage)
     }

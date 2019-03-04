@@ -34,11 +34,15 @@ class Layout extends React.Component {
   toggleDrawer = () => {
     this.setState({ open: !this.state.open })
   }
+  handleLogout = () => {
+    localStorage.removeItem('logged')
+    this.props.history.push('/login')
+  }
   render() {
     const { classes, location } = this.props;
     return (
       <div className={classes.root}>
-        <AppBar />
+        <AppBar onLogout={this.handleLogout} />
         <Drawer
           className={classes.drawer}
           variant="permanent"
