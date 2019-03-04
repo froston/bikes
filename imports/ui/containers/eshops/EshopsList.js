@@ -17,7 +17,7 @@ class EshopsList extends React.Component {
     {
       id: 'actions', label: '', render: (text, rec) => {
         return (
-          <IconButton onClick={e => this.handleRemove(e, rec._id)}>
+          <IconButton onClick={e => this.handleRemove(e, rec._id, rec.eshop)}>
             <DeleteIcon />
           </IconButton>
         )
@@ -29,10 +29,10 @@ class EshopsList extends React.Component {
     const { match, history } = this.props
     history.push(`${match.url}/novy`)
   }
-  handleRemove = (e, id) => {
+  handleRemove = (e, id, eshop) => {
     e.preventDefault()
     e.stopPropagation()
-    Meteor.call('eshops.remove', id)
+    Meteor.call('eshops.remove', id, eshop)
   }
   handleEdit = eshop => {
     const { match, history } = this.props

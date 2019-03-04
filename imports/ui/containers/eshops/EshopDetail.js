@@ -73,13 +73,15 @@ class EshopDetail extends React.Component {
 
   componentDidMount() {
     const { eshop } = this.props
-    this.setState({
-      _id: eshop._id,
-      eshop: eshop.name,
-      url: eshop.url,
-      autoUpdate: eshop.autoUpdate,
-      ...eshop.attributes
-    });
+    if (eshop) {
+      this.setState({
+        _id: eshop._id,
+        eshop: eshop.name,
+        url: eshop.url,
+        autoUpdate: eshop.autoUpdate,
+        ...eshop.attributes
+      });
+    }
   }
 
   changeTab = (e, value) => this.setState({ value })
