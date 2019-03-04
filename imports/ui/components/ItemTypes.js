@@ -134,6 +134,8 @@ class ItemTypes extends React.Component {
 
 ItemTypes.propTypes = {
   classes: PropTypes.object.isRequired,
+  value: PropTypes.string,
+  handleChange: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(ItemTypes);

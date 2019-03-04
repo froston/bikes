@@ -8,7 +8,7 @@ import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Products } from '../../../api/products';
-import { Table, Filter, SetColumns } from '../../components'
+import { Table, FilterProducts, SetColumns } from '../../components'
 
 const styles = theme => ({
   avatar: {
@@ -171,7 +171,7 @@ class ProductList extends React.Component {
             columns={this.state.columns}
             handleChange={this.handleColumns}
           />}
-        filter={<Filter handleFilter={this.handleFilter} />}
+        filter={<FilterProducts handleFilter={this.handleFilter} />}
       />
     );
   }

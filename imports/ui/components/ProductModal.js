@@ -19,13 +19,13 @@ const styles = {
   },
 };
 
-function Transition(props) {
+const Transition = props => {
   return <Slide direction="up" {...props} />;
 }
 
 class ProductModal extends React.PureComponent {
   render() {
-    const { id, classes, open, handleClick, handleClose } = this.props;
+    const { classes, id, open, handleClick, handleClose } = this.props;
     return (
       <Dialog
         fullScreen
@@ -56,4 +56,5 @@ ProductModal.propTypes = {
   handleClick: PropTypes.func,
   handleClose: PropTypes.func,
 };
+
 export default withStyles(styles)(ProductModal);

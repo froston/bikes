@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles';
-import { Tracker } from 'meteor/tracker'
+import { withTracker } from 'meteor/react-meteor-data';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
@@ -72,25 +72,13 @@ class EshopDetail extends React.Component {
   }
 
   componentDidMount() {
-    const { match } = this.props
-    if (match.params && match.params.id) {
-      this.loadData(match.params.id)
-    }
-  }
-
-  loadData = _id => {
-    Tracker.autorun(() => {
-      Meteor.subscribe('eshop', _id);
-      let eshop = Eshops.findOne(_id);
-      if (eshop) {
-        this.setState({
-          _id: eshop._id,
-          eshop: eshop.name,
-          url: eshop.url,
-          autoUpdate: eshop.autoUpdate,
-          ...eshop.attributes
-        });
-      }
+    const { eshop } = this.props
+    this.setState({
+      _id: eshop._id,
+      eshop: eshop.name,
+      url: eshop.url,
+      autoUpdate: eshop.autoUpdate,
+      ...eshop.attributes
     });
   }
 
@@ -98,8 +86,9 @@ class EshopDetail extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault()
-    Meteor.call('eshops.save', this.state);
-    this.props.history.push('/eshopy')
+    Meteor.call('eshops.save', this.state, () => {
+      this.props.history.push('/eshopy')
+    });
   }
 
   handleUpdate = () => {
@@ -112,7 +101,7 @@ class EshopDetail extends React.Component {
   };
 
   handleDeleteProducts = () => {
-    Meteor.call('products.removeByEshop', this.state.eshop, (err, res) => {
+    Meteor.call('products.removeByEshop', this.state.eshop, () => {
       this.props.history.push('/eshopy')
     })
   }
@@ -191,5 +180,10 @@ class EshopDetail extends React.Component {
   }
 }
 
-
-export default withStyles(styles)(withRouter(EshopDetail));
+export default withTracker(props => {
+  const _id = props.match.params.id
+  Meteor.subscribe('eshop', _id);
+  return {
+    eshop: Eshops.findOne({ _id }),
+  }
+})(withStyles(styles)(withRouter(EshopDetail)));

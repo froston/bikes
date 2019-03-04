@@ -69,5 +69,11 @@ class SetColumns extends React.Component {
   }
 }
 
+SetColumns.propTypes = {
+  classes: PropTypes.object.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  columns: PropTypes.object,
+}
+
 export default withStyles(styles)(SetColumns)
 

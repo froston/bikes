@@ -19,7 +19,7 @@ const styles = {
   },
 };
 
-function Transition(props) {
+const Transition = props => {
   return <Slide direction="up" {...props} />;
 }
 
@@ -51,6 +51,9 @@ class ProductsModal extends React.PureComponent {
 
 ProductsModal.propTypes = {
   classes: PropTypes.object.isRequired,
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleClick: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(ProductsModal);

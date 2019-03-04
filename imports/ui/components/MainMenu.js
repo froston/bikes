@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
@@ -37,5 +38,9 @@ const MainMenu = ({ pathname }) => {
     </List >
   )
 }
+
+MainMenu.propTypes = {
+  pathname: PropTypes.string,
+};
 
 export default MainMenu

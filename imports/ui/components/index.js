@@ -3,7 +3,7 @@ import MainMenu from './MainMenu'
 import Table from './Table'
 import TableToolbar from './TableToolbar'
 import TableHead from './TableHead'
-import Filter from './Filter'
+import FilterProducts from './FilterProducts'
 import FilterProjects from './FilterProjects'
 import SetColumns from './SetColumns'
 import ProductsModal from './ProductsModal'
@@ -17,7 +17,7 @@ export {
   Table,
   TableToolbar,
   TableHead,
-  Filter,
+  FilterProducts,
   FilterProjects,
   SetColumns,
   ProductsModal,

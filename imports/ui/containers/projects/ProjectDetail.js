@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles';
-import { Tracker } from 'meteor/tracker'
+import { withTracker } from 'meteor/react-meteor-data';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -69,20 +69,7 @@ class ProjectDetail extends React.Component {
   }
 
   componentDidMount() {
-    const { match } = this.props
-    if (match.params && match.params.id) {
-      this.loadData(match.params.id)
-    }
-  }
-
-  loadData = _id => {
-    Tracker.autorun(() => {
-      Meteor.subscribe('project', _id);
-      let project = Projects.findOne(_id);
-      if (project) {
-        this.setState({ ...project });
-      }
-    });
+    this.setState({ ...this.props.project })
   }
 
   handleSubmit = e => {
@@ -263,5 +250,10 @@ class ProjectDetail extends React.Component {
   }
 }
 
-
-export default withStyles(styles)(withRouter(ProjectDetail));
+export default withTracker(props => {
+  const _id = props.match.params.id
+  Meteor.subscribe('project', _id);
+  return {
+    project: Projects.findOne({ _id }),
+  }
+})(withStyles(styles)(withRouter(ProjectDetail)));

@@ -44,9 +44,6 @@ const toolbarStyles = theme => ({
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
-  rightIcon: {
-    marginLeft: theme.spacing.unit,
-  },
   iconSmall: {
     fontSize: 20,
   },

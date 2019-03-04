@@ -31,6 +31,7 @@ const ApplicationBar = (props) => {
 
 ApplicationBar.propTypes = {
   classes: PropTypes.object.isRequired,
+  onLogout: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(ApplicationBar);

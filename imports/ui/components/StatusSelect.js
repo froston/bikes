@@ -8,14 +8,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import BallIcon from '@material-ui/icons/TripOrigin';
 import { orderStatuses } from '../utils/orderStatus'
 
-const styles = theme => ({
+const styles = {
   formControl: {
     width: '100%',
   },
   icon: {
     marginRight: 10
   }
-});
+};
 
 const StatusSelect = ({ classes, value, onChange }) => (
   <FormControl className={classes.formControl}>

@@ -33,7 +33,7 @@ const styles = theme => ({
 });
 
 
-class Filter extends React.Component {
+class FilterProducts extends React.Component {
   state = {
     anchorEl: null,
     catMain: [],
@@ -196,10 +196,10 @@ class Filter extends React.Component {
   }
 }
 
-Filter.propTypes = {
+FilterProducts.propTypes = {
   classes: PropTypes.object.isRequired,
   handleFilter: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(Filter)
+export default withStyles(styles)(FilterProducts)
 
