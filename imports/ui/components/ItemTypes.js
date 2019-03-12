@@ -29,8 +29,22 @@ const styles = theme => ({
     margin: 0,
     padding: 0,
     listStyleType: 'none',
+    maxHeight: 200,
+    overflowY: 'auto'
   }
 });
+
+const getSuggestions = value => {
+  if (value) {
+    const inputValue = value.trim().toLowerCase();
+    const inputLength = inputValue.length;
+    return inputLength === 0 ? [] : getItemTypes().filter(i =>
+      i.toLowerCase().slice(0, inputLength) === inputValue
+    );
+  } else {
+    return getItemTypes()
+  }
+};
 
 function renderInputComponent(inputProps) {
   const { classes, inputRef = () => { }, ref, ...other } = inputProps;
@@ -59,7 +73,7 @@ class ItemTypes extends React.Component {
 
   handleSuggestionsFetchRequested = ({ value }) => {
     this.setState({
-      suggestions: getItemTypes(),
+      suggestions: getSuggestions(value)
     });
   };
 
@@ -73,7 +87,7 @@ class ItemTypes extends React.Component {
     e.preventDefault()
     e.stopPropagation()
     removeItemType(s)
-    this.setState({ suggestions: getItemTypes() })
+    this.setState({ suggestions: getSuggestions(this.props.value) })
   }
 
   handleChange = name => (event, { newValue }) => {
@@ -85,7 +99,7 @@ class ItemTypes extends React.Component {
     <MenuItem component="div">
       <ListItemText primary={s} />
       {isHighlighted &&
-        <ListItemIcon style={{ marginRight: 0 }}>
+        <ListItemIcon style={{ marginRight: -5 }}>
           <IconButton onClick={e => this.handleRemoveItem(e, s)} >
             <ClearIcon />
           </IconButton >

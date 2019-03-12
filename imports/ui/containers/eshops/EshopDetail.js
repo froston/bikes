@@ -55,6 +55,7 @@ class EshopDetail extends React.Component {
     eshop: '',
     url: '',
     name: '',
+    desc: '',
     id: '',
     item: '',
     ean: '',
@@ -75,12 +76,23 @@ class EshopDetail extends React.Component {
     const { eshop } = this.props
     if (eshop) {
       this.setState({
-        _id: eshop._id,
+        ...eshop,
+        ...eshop.attributes,
         eshop: eshop.name,
-        url: eshop.url,
-        autoUpdate: eshop.autoUpdate,
-        ...eshop.attributes
       });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { eshop } = this.props
+    if (eshop !== prevProps.eshop) {
+      if (eshop) {
+        this.setState({
+          ...eshop,
+          ...eshop.attributes,
+          eshop: eshop.name,
+        });
+      }
     }
   }
 

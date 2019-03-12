@@ -80,6 +80,12 @@ class ProductDetail extends React.Component {
     this.setState({ ...this.props.product })
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.product !== prevProps.product) {
+      this.setState({ ...this.props.product })
+    }
+  }
+
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
   }
@@ -224,7 +230,6 @@ class ProductDetail extends React.Component {
 
 export default withTracker(props => {
   const _id = props.match ? props.match.params.id : props.id
-  console.log(_id)
   Meteor.subscribe('product', _id);
   return {
     product: Products.findOne({ _id }),

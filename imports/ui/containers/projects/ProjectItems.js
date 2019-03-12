@@ -10,7 +10,7 @@ import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Avatar from '@material-ui/core/Avatar';
-import { Table, ProductsModal, ProductModal, ItemTypes } from '../../components'
+import { Table, ProductsModal, ItemTypes } from '../../components'
 import { addItemType } from '../../utils/storage'
 
 const styles = theme => ({
@@ -32,11 +32,10 @@ const styles = theme => ({
 
 class ProjectItems extends React.Component {
   state = {
-    modalProd: false,
     modalList: false,
     prodId: null,
     item: '',
-    quantity: 1
+    quantity: 1,
   }
 
   rows = [
@@ -49,7 +48,7 @@ class ProjectItems extends React.Component {
     { id: 'eshop', label: 'E-shop' },
     { id: 'name', label: 'Název' },
     { id: 'price_vo', label: 'Cena', render: p => `${Math.round(p)} Kč` },
-    { id: 'quantity', label: 'Mnozstvi' },
+    { id: 'quantity', label: 'Množství' },
     {
       id: 'actions', label: '', render: (text, rec) => {
         return (
@@ -69,24 +68,24 @@ class ProjectItems extends React.Component {
     this.setState({ modalList: !this.state.modalList })
   }
 
-  openProduct = (v) => {
-    this.setState({ prodId: v._id })
-    this.toggleModalProd()
-  }
-
-  addItem = (item) => {
-    item.item = this.state.item
-    item.quantity = this.state.quantity
-    this.props.addItem(item)
-    this.setState({ item: '', quantity: 1 })
+  editProduct = p => {
+    this.setState({ prodId: p._id })
     this.toggleModalList()
-    // add new item type in storage
-    addItemType(this.state.item)
   }
 
-  updateItem = item => {
-    this.props.updateItem(item)
-    this.toggleModalProd()
+  saveItem = (item) => {
+    if (!!this.state.prodId) {
+      this.props.updateItem(this.state.prodId, item)
+      this.setState({ prodId: null })
+    } else {
+      item.item = this.state.item
+      item.quantity = this.state.quantity
+      this.props.addItem(item)
+      this.setState({ item: '', quantity: 1 })
+      // add new item type in storage
+      addItemType(this.state.item)
+    }
+    this.toggleModalList()
   }
 
   removeItem = (e, id) => {
@@ -101,7 +100,7 @@ class ProjectItems extends React.Component {
 
   render() {
     const { items, classes } = this.props;
-    const { modalList, modalProd } = this.state;
+    const { modalList } = this.state;
     return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
@@ -141,18 +140,12 @@ class ProjectItems extends React.Component {
           <Table
             rows={this.rows}
             data={items}
-            handleClick={this.openProduct}
-          />
-          <ProductModal
-            open={modalProd}
-            handleClick={this.updateItem}
-            handleClose={this.toggleModalProd}
-            id={this.state.prodId}
+            handleClick={this.editProduct}
           />
           <ProductsModal
             open={modalList}
             handleClose={this.toggleModalList}
-            handleClick={this.addItem}
+            handleClick={this.saveItem}
           />
         </div>
       </div>
@@ -164,6 +157,7 @@ ProjectItems.propTypes = {
   classes: PropTypes.object.isRequired,
   items: PropTypes.array,
   addItem: PropTypes.func,
+  updateItem: PropTypes.func,
   removeItem: PropTypes.func,
 };
 

@@ -195,6 +195,9 @@ class XmlAtr extends React.Component {
 
 XmlAtr.propTypes = {
   classes: PropTypes.object.isRequired,
+  values: PropTypes.object.isRequired,
+  handleCheck: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(XmlAtr);

@@ -72,6 +72,12 @@ class ProjectDetail extends React.Component {
     this.setState({ ...this.props.project })
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.project !== prevProps.project) {
+      this.setState({ ...this.props.project })
+    }
+  }
+
   handleSubmit = e => {
     e.preventDefault()
     const project = {
@@ -80,12 +86,6 @@ class ProjectDetail extends React.Component {
     }
     Meteor.call('projects.save', project);
     this.props.history.push('/projekty')
-  }
-
-  handleDelete = () => {
-    Meteor.call('projects.remove', this.state._id, () => {
-      this.props.history.push('/projekty')
-    });
   }
 
   calcPrices = () => {
@@ -131,10 +131,9 @@ class ProjectDetail extends React.Component {
     this.setState({ items: this.state.items.concat(newItem) })
   }
 
-  updateItem = (itemToUpdate) => {
+  updateItem = (id, itemToUpdate) => {
     const items = this.state.items.map(i => {
-      const item = { ...i, ...itemToUpdate }
-      return i._id === item._id ? item : i
+      return id == i._id ? { ...i, ...itemToUpdate } : i
     })
     this.setState({ items })
   }
@@ -209,7 +208,13 @@ class ProjectDetail extends React.Component {
                         </ExpansionPanelDetails>
                         <Divider />
                         <ExpansionPanelActions>
-                          <Button size="small" color="secondary" onClick={() => this.removeSection(sec)}>Smazat sekci</Button>
+                          <Button
+                            size="small"
+                            color="secondary"
+                            onClick={() => this.removeSection(sec)}>
+                            <ClearIcon className={classes.leftIcon} />
+                            Smazat sekci
+                          </Button>
                         </ExpansionPanelActions>
                       </ExpansionPanel>
                     )
@@ -233,14 +238,6 @@ class ProjectDetail extends React.Component {
               >
                 <SaveIcon className={classes.leftIcon} />
                 Uložit
-            </Button>
-              <Button
-                onClick={this.handleDelete}
-                className={classes.button}
-                color="secondary"
-              >
-                <ClearIcon className={classes.leftIcon} />
-                Smazat
             </Button>
             </CardActions>
           </Card>
